@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Loker — FastProduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d0b;--panel:#121512;--line:#252b24;--text:#edf0e9;--muted:#858d80;--lime:#c5f36b;--mono:'DM Mono',monospace;--font:'Manrope',sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font)}a{color:inherit;text-decoration:none}button,input,select{font:inherit}
+.layout{display:flex;min-height:100vh}.sidebar{width:230px;background:#0e110e;border-right:1px solid var(--line);padding:26px 16px;flex-shrink:0}.logo{font-size:18px;font-weight:800}.logo span{color:var(--lime)}.logo small{display:block;color:var(--muted);font:10px var(--mono);letter-spacing:2px;margin-top:5px}.nav-label{font:10px var(--mono);color:#697164;letter-spacing:1.5px;margin:32px 10px 12px}.nav a{display:block;padding:12px;border-radius:8px;color:#9ba395;font-size:12px;font-weight:700;margin:3px 0}.nav a.active,.nav a:hover{background:#20271d;color:var(--lime)}
+.main{flex:1;min-width:0;max-width:1500px;margin:auto;padding:32px 4% 60px}.top{font:11px var(--mono);color:var(--muted);margin-bottom:35px}.top b{color:var(--lime);font-weight:400}.heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:27px}.eyebrow{font:10px var(--mono);letter-spacing:2px;color:var(--lime);margin-bottom:10px}h1{font-size:36px;letter-spacing:-1.5px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:9px}.btn{background:var(--lime);color:#11170c;border:0;border-radius:8px;padding:12px 16px;font-size:11px;font-weight:800;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:19px}.label{font:10px var(--mono);color:var(--muted);letter-spacing:1px}.value{font-size:25px;font-weight:800;margin-top:13px}.desc{font-size:10px;color:var(--muted);margin-top:7px}.section{margin-top:29px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.section-head h2{font-size:15px;margin:0}.section-head span{font:10px var(--mono);color:var(--muted)}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:15px}.tab{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 13px;border-radius:7px;font-size:10px;cursor:pointer}.tab.active{background:#27321e;border-color:#4d6237;color:var(--lime)}.job-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.job{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:19px}.job-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.job-icon{width:39px;height:39px;border-radius:9px;background:#27321e;display:grid;place-items:center;color:var(--lime);font-size:18px}.tag{font:9px var(--mono);padding:5px 8px;border-radius:5px;background:#252d21;color:var(--lime)}.tag.draft{background:#362d1d;color:#eabf78}.job h3{font-size:14px;margin:16px 0 6px}.job p{font-size:10px;color:var(--muted);line-height:1.7;margin:0}.job-meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.job-meta span{font:9px var(--mono);color:#b3bbaa;background:#20251f;padding:6px 8px;border-radius:5px}.job-foot{border-top:1px solid var(--line);margin-top:17px;padding-top:13px;display:flex;justify-content:space-between;align-items:center}.job-foot a{color:var(--lime);font-size:10px}.empty{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:32px;text-align:center;color:var(--muted);font-size:11px}.empty strong{display:block;color:var(--text);margin:10px}.workflow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.step{padding:17px;border:1px solid var(--line);border-radius:10px;background:#101410}.step b{color:var(--lime);font:11px var(--mono)}.step strong{display:block;font-size:11px;margin:10px 0 6px}.step p{font-size:10px;color:var(--muted);line-height:1.7;margin:0}.note{margin-top:23px;padding:14px;border:1px dashed #343d30;border-radius:9px;color:var(--muted);font-size:10px;line-height:1.8}.note b{color:var(--lime)}
+.modal-bg{display:none;position:fixed;inset:0;background:#000b;z-index:5;align-items:center;justify-content:center;padding:15px}.modal-bg.show{display:flex}.modal{background:#151a14;border:1px solid #394333;border-radius:13px;padding:23px;width:100%;max-width:430px}.modal h3{margin:0 0 7px}.modal p{font-size:11px;color:var(--muted);line-height:1.7}.modal input,.modal select,.modal textarea{display:block;width:100%;margin:11px 0;background:#0b0e0b;border:1px solid var(--line);color:white;padding:12px;border-radius:7px;font-size:11px}.modal textarea{min-height:75px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.secondary{background:#252b24;color:white;border:1px solid var(--line);border-radius:7px;padding:10px 14px}
+@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.layout{display:block}.sidebar{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line)}.nav-label{display:none}.nav{display:flex;overflow:auto;gap:4px;margin-top:14px}.nav a{white-space:nowrap;padding:9px;font-size:10px}.main{padding:23px 15px}.heading{align-items:start;flex-direction:column}.job-grid,.workflow{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}h1{font-size:29px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<a class="logo" href="index.html">FAST<span>PRODUCTION</span><small>WORKFORCE CENTER</small></a>
+<div class="nav-label">WORKSPACE</div><nav class="nav">
+<a href="dashboard.html">▦ Command Center</a><a href="marketplace.html">◈ Marketplace</a>
+  <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span class="nav-text">Scope</span></a><a href="create-design.html">✳ Design Studio</a><a href="lab-konveksibos.html">⚙ Lab Konveksibos</a><a class="active" href="your-loker.html">♙ Your Loker</a></nav>
+<div class="nav-label">MANAGEMENT</div><nav class="nav">
+<a href="equipment.html">▣ Equipment</a>
+<a href="employees.html">♙ Employees</a><a href="profile.html">◎ My Profile</a></nav>
+<div class="nav-label">FINANCIAL</div><nav class="nav">
+<a href="wallet.html">◉ My Wallet</a><a href="transactions.html">⇄ Transactions</a><a href="invoices.html">▤ Invoices</a></nav>
+</aside>
+<main class="main">
+<div class="top">WORKSPACE / MANAGEMENT / <b>YOUR LOKER</b></div>
+<div class="heading"><div><div class="eyebrow">WORKFORCE & OPPORTUNITY</div><h1>Your Loker<span style="color:var(--lime)">.</span></h1><div class="sub">Connect production opportunities with the people who make them happen.</div></div><button class="btn" onclick="openModal()">＋ Create Vacancy</button></div>
+<div class="grid">
+<div class="card"><div class="label">ACTIVE VACANCIES</div><div class="value">—</div><div class="desc">Published opportunities</div></div>
+<div class="card"><div class="label">TOTAL APPLICANTS</div><div class="value">—</div><div class="desc">Candidate applications</div></div>
+<div class="card"><div class="label">DRAFT VACANCIES</div><div class="value">—</div><div class="desc">Awaiting owner approval</div></div>
+<div class="card"><div class="label">HIRED WORKERS</div><div class="value">—</div><div class="desc">Successful placements</div></div>
+</div>
+<section class="section">
+<div class="section-head"><h2>Recruitment Workspace</h2><span>YOUR OPPORTUNITIES</span></div>
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this,'all')">All Vacancies</button>
+<button class="tab" onclick="switchTab(this,'published')">Published</button>
+<button class="tab" onclick="switchTab(this,'draft')">Drafts</button>
+<button class="tab" onclick="switchTab(this,'closed')">Closed</button>
+</div>
+<div class="job-grid" id="jobs">
+<div class="job">
+<div class="job-top"><div class="job-icon">⚙</div><span class="tag draft">DRAFT · ILLUSTRATIVE</span></div>
+<h3>Operator Mesin Obras M600</h3>
+<p>Generated from an equipment requirement concept. This vacancy still needs owner review before publishing.</p>
+<div class="job-meta"><span>GARMENT</span><span>OPERATOR</span><span>1 POSITION</span></div>
+<div class="job-foot"><span style="font-size:10px;color:var(--muted)">Source: Equipment</span><a href="equipment.html">View machine →</a></div>
+</div>
+<div class="job">
+<div class="job-top"><div class="job-icon">✂</div><span class="tag draft">DRAFT · ILLUSTRATIVE</span></div>
+<h3>Operator Cutting Fabric</h3>
+<p>Sample vacancy for a cutting operator. Define requirements and compensation before publishing.</p>
+<div class="job-meta"><span>CUTTING</span><span>PRODUCTION</span><span>1 POSITION</span></div>
+<div class="job-foot"><span style="font-size:10px;color:var(--muted)">Source: Manual draft</span><a href="#" onclick="return false">Review draft →</a></div>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="section-head"><h2>Candidate Management</h2><span>APPLICATION PIPELINE</span></div>
+<div class="empty"><div style="font-size:25px">♙</div><strong>No candidate applications</strong>Applications will appear here when published vacancies receive candidates.</div>
+</section>
+<section class="section">
+<div class="section-head"><h2>How Recruitment Works</h2><span>WORKFORCE FLOW</span></div>
+<div class="workflow">
+<div class="step"><b>01 / CREATE</b><strong>Publish an opportunity</strong><p>Create a vacancy manually or start from an equipment operator requirement.</p></div>
+<div class="step"><b>02 / DISCOVER</b><strong>Find the right people</strong><p>Receive applications and review candidate skills, experience, and availability.</p></div>
+<div class="step"><b>03 / CONNECT</b><strong>Assign your workforce</strong><p>Confirm a candidate and connect the worker to the relevant production activity or machine.</p></div>
+</div>
+</section>
+<div class="note"><b>WORKFORCE MARKETPLACE</b><br>This page is a frontend shell. Candidate profiles, applications, recruitment, messaging, and worker assignments are not connected. Equipment-generated vacancies must remain drafts until approved by their owner.</div>
+</main>
+</div>
+<div class="modal-bg" id="modal">
+<div class="modal">
+<div class="eyebrow">NEW OPPORTUNITY</div><h3>Create Vacancy</h3>
+<p>Build a recruitment opportunity for your business or production team.</p>
+<input placeholder="Job title">
+<select><option>Choose job category</option><option>Operator Obras</option><option>Operator Sewing</option><option>Cutting Operator</option><option>Finishing</option><option>Production Supervisor</option><option>Other</option></select>
+<input placeholder="Number of positions">
+<select><option>Employment type</option><option>Full time</option><option>Part time</option><option>Project based</option><option>Freelance</option></select>
+<textarea placeholder="Describe the job, skills, and requirements"></textarea>
+<div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="closeModal();alert('Vacancy draft is not saved yet. Backend is not connected.')">Create Draft</button></div>
+</div></div>
+<script>
+function openModal(){document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
+function switchTab(btn,type){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');const jobs=document.getElementById('jobs');if(type==='all'||type==='draft'){jobs.style.display='grid'}else{jobs.style.display='none';jobs.insertAdjacentHTML('afterend','<div class="empty" id="filterEmpty"><strong>No '+type+' vacancies</strong>There are no records in this prototype.</div>');}document.getElementById('filterEmpty')?.remove();if(type!=='all'&&type!=='draft')jobs.insertAdjacentHTML('afterend','<div class="empty" id="filterEmpty"><strong>No '+type+' vacancies</strong>There are no records in this prototype.</div>')}
+</script>
+</body>
+</html>

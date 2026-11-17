@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transactions — FastProduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d0b;--panel:#121512;--line:#252b24;--text:#edf0e9;--muted:#858d80;--lime:#c5f36b;--mono:'DM Mono',monospace;--font:'Manrope',sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font)}a{color:inherit;text-decoration:none}button,input,select{font:inherit}
+.layout{display:flex;min-height:100vh}.sidebar{width:230px;background:#0e110e;border-right:1px solid var(--line);padding:26px 16px;flex-shrink:0}.logo{font-size:18px;font-weight:800}.logo span{color:var(--lime)}.logo small{display:block;color:var(--muted);font:10px var(--mono);letter-spacing:2px;margin-top:5px}.nav-label{font:10px var(--mono);color:#697164;letter-spacing:1.5px;margin:32px 10px 12px}.nav a{display:block;padding:12px;border-radius:8px;color:#9ba395;font-size:12px;font-weight:700;margin:3px 0}.nav a.active,.nav a:hover{background:#20271d;color:var(--lime)}.main{flex:1;min-width:0;max-width:1500px;margin:auto;padding:32px 4% 60px}.top{font:11px var(--mono);color:var(--muted);margin-bottom:35px}.top b{color:var(--lime);font-weight:400}.heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:27px}.eyebrow{font:10px var(--mono);letter-spacing:2px;color:var(--lime);margin-bottom:10px}h1{font-size:36px;letter-spacing:-1.5px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:9px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:19px}.label{font:10px var(--mono);color:var(--muted);letter-spacing:1px}.value{font-size:25px;font-weight:800;margin-top:14px}.desc{font-size:10px;color:var(--muted);margin-top:7px}.section{margin-top:29px}.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.section-head h2{font-size:15px;margin:0}.filters{display:flex;gap:9px;flex-wrap:wrap}.filters input,.filters select{background:#151a14;border:1px solid var(--line);border-radius:7px;color:var(--text);padding:10px;font-size:11px}.table-wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 15px}table{width:100%;border-collapse:collapse;min-width:600px}th{text-align:left;padding:14px 9px;color:var(--muted);font:9px var(--mono);border-bottom:1px solid var(--line)}td{padding:16px 9px;font-size:11px;border-bottom:1px solid #20251f}.muted{color:var(--muted)}.empty{text-align:center;padding:45px 10px;color:var(--muted);font-size:11px}.empty strong{display:block;color:var(--text);margin:10px}.pill{font:9px var(--mono);padding:5px 8px;border-radius:5px;background:#252b22;color:var(--lime)}.note{margin-top:20px;border:1px dashed #343d30;padding:14px;border-radius:9px;font-size:10px;color:var(--muted);line-height:1.8}.note b{color:var(--lime)}
+@media(max-width:700px){.layout{display:block}.sidebar{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line)}.nav-label{display:none}.nav{display:flex;overflow:auto;gap:4px;margin-top:14px}.nav a{white-space:nowrap;padding:9px;font-size:10px}.main{padding:23px 15px}.heading{align-items:start;flex-direction:column}.grid{grid-template-columns:1fr 1fr}h1{font-size:29px}}
+</style>
+</head>
+<body><div class="layout">
+<aside class="sidebar">
+<a class="logo" href="index.html">FAST<span>PRODUCTION</span><small>FINANCIAL CENTER</small></a>
+<div class="nav-label">WORKSPACE</div><nav class="nav">
+<a href="dashboard.html">▦ Command Center</a><a href="marketplace.html">◈ Marketplace</a>
+  <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span class="nav-text">Scope</span></a><a href="create-design.html">✳ Design Studio</a><a href="lab-konveksibos.html">⚙ Lab Konveksibos</a><a href="your-loker.html">♙ Your Loker</a>
+<a href="employees.html">♙ Employees</a></nav>
+<div class="nav-label">FINANCIAL</div><nav class="nav">
+<a href="wallet.html">◉ My Wallet</a><a class="active" href="transactions.html">⇄ Transactions</a><a href="invoices.html">▤ Invoices</a></nav>
+<div class="nav-label">ACCOUNT</div><nav class="nav"><a href="profile.html">◎ My Profile</a><a href="settings.html">⚙ Settings</a></nav>
+</aside>
+<main class="main">
+<div class="top">WORKSPACE / FINANCIAL / <b>TRANSACTIONS</b></div>
+<div class="heading"><div><div class="eyebrow">FINANCIAL ACTIVITY</div><h1>Transactions<span style="color:var(--lime)">.</span></h1><div class="sub">Every financial movement, in one transparent timeline.</div></div><span class="pill">LEDGER OVERVIEW</span></div>
+<div class="grid">
+<div class="card"><div class="label">TOTAL TRANSACTIONS</div><div class="value">—</div><div class="desc">All recorded activities</div></div>
+<div class="card"><div class="label">MONEY IN</div><div class="value">Rp —</div><div class="desc">Incoming funds</div></div>
+<div class="card"><div class="label">MONEY OUT</div><div class="value">Rp —</div><div class="desc">Outgoing funds</div></div>
+</div>
+<section class="section">
+<div class="section-head"><h2>Transaction History</h2><span class="muted" style="font:10px var(--mono)">ALL ACTIVITY</span></div>
+<div class="filters"><input id="search" placeholder="Search reference or activity..." oninput="filterRows()"><select id="type" onchange="filterRows()"><option value="">All types</option><option>Incoming</option><option>Outgoing</option></select><select id="status" onchange="filterRows()"><option value="">All statuses</option><option>Completed</option><option>Pending</option><option>Failed</option></select></div>
+<div class="table-wrap" style="margin-top:13px"><table><thead><tr><th>ACTIVITY</th><th>REFERENCE</th><th>DATE</th><th>TYPE</th><th>AMOUNT</th><th>STATUS</th></tr></thead><tbody id="rows"><tr><td colspan="6"><div class="empty"><div style="font-size:24px">⇄</div><strong>No transactions recorded</strong>Transactions will appear here after the wallet system is connected.</div></td></tr></tbody></table></div>
+</section>
+<div class="note"><b>TRANSACTION LEDGER</b><br>Every transaction should eventually have a unique reference, timestamp, source, destination, amount, status, and audit trail. This page is currently a visual prototype.</div>
+</main></div>
+<script>
+function filterRows(){document.getElementById('rows').innerHTML='<tr><td colspan="6"><div class="empty"><strong>No matching transactions</strong>There are no records in this prototype.</div></td></tr>'}
+</script></body></html>

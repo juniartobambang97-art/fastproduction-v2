@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Profile — FastProduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#0b0e0c;
+  --panel:#121714;
+  --panel2:#19211c;
+  --line:#29332c;
+  --text:#edf2ed;
+  --muted:#89958c;
+  --lime:#c5f36b;
+  --mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Manrope,sans-serif;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.topbar{
+  height:66px;padding:0 5%;display:flex;align-items:center;
+  justify-content:space-between;border-bottom:1px solid var(--line);
+}
+.logo{font-size:18px;font-weight:800;letter-spacing:-1px}
+.logo span{color:var(--lime)}
+.top-links{display:flex;gap:22px;font-size:11px;color:var(--muted)}
+.top-links a:hover{color:var(--lime)}
+.container{max-width:1120px;margin:auto;padding:38px 22px 70px}
+.eyebrow{font:10px var(--mono);letter-spacing:2px;color:var(--lime)}
+.page-heading{margin-bottom:25px}
+h1{font-size:34px;letter-spacing:-1.5px;margin:9px 0 5px}
+.subtitle{font-size:12px;color:var(--muted)}
+.profile-card{
+  border:1px solid var(--line);border-radius:10px;
+  background:linear-gradient(130deg,#172019,#111613);
+  padding:25px;margin-bottom:20px;
+}
+.profile-top{display:flex;align-items:center;gap:18px}
+.avatar{
+  width:76px;height:76px;border-radius:13px;
+  background:#28372b;color:var(--lime);
+  display:grid;place-items:center;font-size:29px;
+  border:1px solid #40513d;flex-shrink:0;
+}
+.identity{flex:1;min-width:0}
+.identity h2{font-size:21px;margin:0 0 5px}
+.identity p{font-size:12px;color:var(--muted);margin:0}
+.status{
+  font:10px var(--mono);color:var(--lime);
+  border:1px solid #465b35;border-radius:4px;padding:7px 9px;
+}
+.profile-bottom{
+  border-top:1px solid var(--line);margin-top:22px;padding-top:17px;
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+}
+.profile-meta{display:flex;flex-wrap:wrap;gap:18px}
+.meta{font-size:11px;color:var(--muted)}
+.meta strong{color:var(--text);font-weight:600}
+.btn{
+  border:1px solid var(--line);background:var(--panel2);
+  color:var(--text);padding:10px 14px;border-radius:5px;
+  font-size:11px;font-weight:700;
+}
+.btn:hover{border-color:var(--lime);color:var(--lime)}
+.btn.primary{background:var(--lime);border-color:var(--lime);color:#11170d}
+.section-title{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin:30px 0 13px;
+}
+.section-title h2{font-size:15px;margin:0}
+.section-title span{font:10px var(--mono);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.panel{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:19px;min-width:0;
+}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel h3{font-size:13px;margin:0}
+.panel p{font-size:11px;line-height:1.7;color:var(--muted);margin:9px 0 0}
+.panel-icon{
+  width:35px;height:35px;border-radius:8px;
+  display:grid;place-items:center;background:#263329;
+  color:var(--lime);font-size:17px;flex-shrink:0;
+}
+.panel-link{
+  display:inline-block;color:var(--lime);font-size:10px;
+  font-weight:700;margin-top:16px;
+}
+.role-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.role{
+  border:1px solid var(--line);border-radius:4px;
+  padding:7px 9px;font-size:10px;color:#b8c3ba;
+}
+.role.add{color:var(--lime);border-color:#52643d}
+.empty{
+  margin-top:15px;border:1px dashed #3b493e;
+  border-radius:6px;padding:19px;text-align:center;
+}
+.empty-icon{font-size:22px;color:var(--lime)}
+.empty strong{display:block;font-size:12px;margin:8px 0 5px}
+.empty p{margin:0 auto 13px;max-width:310px}
+.equipment-list{margin-top:15px}
+.equipment-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+}
+.equipment-item:last-child{border:0}
+.equipment-symbol{
+  width:38px;height:38px;border-radius:7px;
+  background:var(--panel2);display:grid;place-items:center;
+  color:var(--lime);font-size:17px;
+}
+.equipment-info{flex:1;min-width:0}
+.equipment-info strong{font-size:11px}
+.equipment-info p{margin:3px 0 0;font-size:10px}
+.small-status{font:9px var(--mono);color:var(--muted)}
+.app-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.app-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:19px;min-height:145px;
+  display:flex;flex-direction:column;transition:.2s;
+}
+.app-card.available:hover{border-color:var(--lime);transform:translateY(-2px)}
+.app-icon{font-size:23px;color:var(--lime);margin-bottom:13px}
+.app-card h3{font-size:13px;margin:0}
+.app-card p{font-size:10px;line-height:1.6;color:var(--muted);margin:7px 0}
+.app-state{font:9px var(--mono);color:var(--muted);margin-top:auto;padding-top:12px}
+.app-state.ready{color:var(--lime)}
+.note{
+  border:1px solid var(--line);background:#101612;
+  border-radius:7px;padding:15px;margin-top:20px;
+  color:var(--muted);font-size:11px;line-height:1.7;
+}
+.note strong{color:var(--lime)}
+.footer{
+  border-top:1px solid var(--line);padding-top:20px;
+  margin-top:40px;color:#657067;font:10px var(--mono);
+  text-align:center;
+}
+@media(max-width:700px){
+  .container{padding:27px 15px 55px}
+  .top-links{gap:12px}
+  .grid{grid-template-columns:1fr}
+  .app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .profile-bottom{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:420px){
+  .top-links a:nth-child(2){display:none}
+  .profile-card{padding:17px}
+  .avatar{width:60px;height:60px}
+  .identity h2{font-size:17px}
+  .status{font-size:8px}
+  .app-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="logo" href="index.html">FAST<span>PRODUCTION</span></a>
+  <nav class="top-links">
+    <a href="index.html">Home</a>
+    <a href="marketplace.html">Marketplace</a>
+  <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span class="nav-text">Scope</span></a>
+    <a href="create-design.html">Creator Studio</a>
+    <a href="dashboard.html">Command Center</a>
+    <a href="employees.html">Employees</a>
+  </nav>
+</header>
+
+<main class="container">
+
+  <div class="page-heading">
+    <div class="eyebrow">YOUR PROFESSIONAL SPACE</div>
+    <h1>Profile Hub</h1>
+    <div class="subtitle">Your identity, resources, and professional activities in one place.</div>
+  </div>
+
+  <!-- PROFILE IDENTITY -->
+  <section class="profile-card">
+    <div class="profile-top">
+      <div class="avatar">+</div>
+      <div class="identity">
+        <h2>Your Name</h2>
+        <p>Build your professional identity on FastProduction.</p>
+      </div>
+      <div class="status">● ACCOUNT</div>
+    </div>
+
+    <div class="profile-bottom">
+      <div class="profile-meta">
+        <div class="meta">Location: <strong>Not set</strong></div>
+        <div class="meta">Business: <strong>Not registered</strong></div>
+        <div class="meta">Member: <strong>FastProduction</strong></div>
+      </div>
+      <button class="btn" onclick="alert('Profile editor will be developed next.')">
+        Edit Profile ↗
+      </button>
+    </div>
+  </section>
+
+  <!-- IDENTITY -->
+  <div class="section-title">
+    <h2>Professional Identity</h2>
+    <span>01 / IDENTITY</span>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Personal Information</h3>
+        <div class="panel-icon">◉</div>
+      </div>
+      <p>Your personal details, contact information, location, and professional introduction.</p>
+      <a class="panel-link" href="#" onclick="return comingSoon('Personal Information')">Manage information ↗</a>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Business Identity</h3>
+        <div class="panel-icon">▦</div>
+      </div>
+      <p>Introduce your brand, workshop, company, or independent business.</p>
+      <a class="panel-link" href="#" onclick="return comingSoon('Business Identity')">Manage business ↗</a>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Roles & Capabilities</h3>
+        <div class="panel-icon">◇</div>
+      </div>
+      <p>Choose the professional roles that describe your activities in the fashion industry.</p>
+      <div class="role-list">
+        <span class="role">Designer</span>
+        <span class="role">Brand</span>
+        <span class="role">Manufacturer</span>
+        <span class="role">Supplier</span>
+        <span class="role">Worker</span>
+        <span class="role">Customer</span>
+        <span class="role add">+ Add role</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Portfolio</h3>
+        <div class="panel-icon">▧</div>
+      </div>
+      <p>Showcase your designs, production results, previous projects, and professional experience.</p>
+      <a class="panel-link" href="#" onclick="return comingSoon('Portfolio')">Open portfolio ↗</a>
+    </section>
+  </div>
+
+  <!-- RESOURCES -->
+  <div class="section-title">
+    <h2>My Resources</h2>
+    <span>02 / RESOURCES</span>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h3>My Equipment</h3>
+        <p>Manage your machines, production equipment, and operator assignments.</p>
+      </div>
+      <div class="panel-icon">⚙</div>
+    </div>
+
+    <div id="equipment-content">
+      <div class="empty">
+        <div class="empty-icon">＋</div>
+        <strong>No equipment registered yet</strong>
+        <p>Add your first machine or production equipment to build your workshop inventory.</p>
+        <button class="btn primary" onclick="comingSoon('Equipment Manager')">Add Equipment</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITIES -->
+  <div class="section-title">
+    <h2>Professional Activities</h2>
+    <span>03 / ACTIVITIES</span>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Activity & Reputation</h3>
+        <div class="panel-icon">↗</div>
+      </div>
+      <p>Your project history, completed work, collaboration records, and professional reputation.</p>
+      <a class="panel-link" href="#" onclick="return comingSoon('Activity & Reputation')">View activity ↗</a>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Account Settings</h3>
+        <div class="panel-icon">⚙</div>
+      </div>
+      <p>Manage account preferences, security, notifications, and privacy settings.</p>
+      <a class="panel-link" href="#" onclick="return comingSoon('Account Settings')">Manage account ↗</a>
+    </section>
+  </div>
+
+  <!-- APPLICATIONS -->
+  <div class="section-title">
+    <h2>Your Applications</h2>
+    <span>04 / WORKSPACE</span>
+  </div>
+
+  <div class="app-grid">
+
+    <a class="app-card available" href="create-design.html">
+      <div class="app-icon">✳</div>
+      <h3>Design Studio</h3>
+      <p>Create fashion designs and prepare production projects.</p>
+      <div class="app-state ready">OPEN WORKSPACE ↗</div>
+    </a>
+
+    <div class="app-card">
+      <div class="app-icon">▥</div>
+      <h3>Lab Konveksibos</h3>
+      <p>Monitor workshop operations, jobs, workers, and production progress.</p>
+      <div class="app-state">WORKSPACE MODULE</div>
+    </div>
+
+    <div class="app-card">
+      <div class="app-icon">⌕</div>
+      <h3>Your Loker</h3>
+      <p>Manage job vacancies and find workers for your production needs.</p>
+      <div class="app-state">WORKSPACE MODULE</div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>YOUR PROFILE, YOUR GROWTH.</strong><br>
+    Start with your personal identity. Add business information, equipment,
+    and professional activities as your work grows.
+    Your workspace can expand with your needs.
+  </div>
+
+  <footer class="footer">
+    FASTPRODUCTION — CONNECTING PEOPLE, EQUIPMENT & PRODUCTION.
+  </footer>
+
+</main>
+
+<script>
+function comingSoon(name) {
+  alert(name + ' module will be developed in the next stage.');
+  return false;
+}
+</script>
+
+</body>
+</html>

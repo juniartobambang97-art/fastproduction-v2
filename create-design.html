@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator Studio — FastProduction</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0b0d0c;
+  --panel: #121614;
+  --panel2: #191e1b;
+  --line: #29312c;
+  --text: #edf2ed;
+  --muted: #849087;
+  --lime: #c5f36b;
+  --mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+}
+
+button, input, select, textarea { font: inherit; }
+
+.topbar {
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+
+.logo {
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-size: 18px;
+}
+
+.logo span { color: var(--lime); }
+
+.top-meta {
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 38px 24px 80px;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  color: var(--lime);
+  font: 11px var(--mono);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(27px, 5vw, 42px);
+  letter-spacing: -2px;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 9px;
+}
+
+.draft {
+  border: 1px solid var(--line);
+  padding: 9px 13px;
+  color: var(--muted);
+  font: 11px var(--mono);
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.step {
+  padding: 16px 12px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+
+.step:last-child { border: 0; }
+
+.step-number {
+  color: var(--lime);
+  font: 11px var(--mono);
+  margin-bottom: 7px;
+}
+
+.step-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.step-desc {
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.sidebar {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  position: sticky;
+  top: 15px;
+}
+
+.side-label {
+  color: var(--muted);
+  font: 10px var(--mono);
+  padding: 12px 10px;
+  letter-spacing: 1px;
+}
+
+.side-link {
+  padding: 12px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.side-link.active {
+  background: #242e25;
+  color: var(--lime);
+}
+
+.side-link:hover { background: var(--panel2); }
+
+.content {
+  min-width: 0;
+}
+
+.section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 23px;
+  margin-bottom: 17px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.section h2 {
+  font-size: 17px;
+  margin: 0;
+  letter-spacing: -.5px;
+}
+
+.section-desc {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.tag {
+  color: var(--lime);
+  border: 1px solid #52613d;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font: 9px var(--mono);
+  white-space: nowrap;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field { min-width: 0; }
+
+.field.full { grid-column: 1 / -1; }
+
+label {
+  display: block;
+  font-size: 11px;
+  color: #b9c3bb;
+  margin-bottom: 8px;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: #0c100e;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 12px;
+  outline: none;
+  font-size: 12px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--lime);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #58625b;
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.upload {
+  min-height: 145px;
+  background: #0c100e;
+  border: 1px dashed #465248;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+}
+
+.upload strong {
+  color: var(--lime);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.cost-placeholder {
+  border: 1px dashed #465248;
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.cost-placeholder strong {
+  display: block;
+  color: var(--lime);
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.campaign-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #192219;
+  border: 1px solid #394b31;
+  padding: 14px;
+  border-radius: 5px;
+  margin-bottom: 17px;
+}
+
+.campaign-info strong {
+  color: var(--lime);
+  font: 12px var(--mono);
+}
+
+.campaign-info span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--lime);
+  color: #11170d;
+  border-color: var(--lime);
+}
+
+.btn:hover { opacity: .85; }
+
+.footer {
+  text-align: center;
+  color: #657067;
+  font: 10px var(--mono);
+  margin-top: 35px;
+}
+
+@media(max-width: 760px) {
+  .container { padding: 27px 15px 55px; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+  }
+  .side-label { display: none; }
+  .side-link { white-space: nowrap; }
+  .steps { grid-template-columns: repeat(5, 130px); overflow-x: auto; }
+  .heading { align-items: flex-start; flex-direction: column; }
+}
+
+@media(max-width: 480px) {
+  .section { padding: 17px; }
+  .field-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+  .upload-grid { grid-template-columns: 1fr; }
+  .upload { min-height: 105px; }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="logo">FAST<span>PRODUCTION</span></div>
+  <div class="top-meta">CREATOR WORKSPACE / V1.0</div>
+</header>
+
+<main class="container">
+
+  <div class="heading">
+    <div>
+      <div class="eyebrow">FASHION PRODUCT DEVELOPMENT</div>
+      <h1>Creator Studio</h1>
+      <div class="subtitle">Turn your fashion idea into a production-ready project.</div>
+    </div>
+    <div class="draft">● NEW PROJECT / DRAFT</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">01</div>
+      <div class="step-name">Design</div>
+      <div class="step-desc">Visual concept</div>
+    </div>
+    <div class="step">
+      <div class="step-number">02</div>
+      <div class="step-name">Product</div>
+      <div class="step-desc">Specifications</div>
+    </div>
+    <div class="step">
+      <div class="step-number">03</div>
+      <div class="step-name">Cost</div>
+      <div class="step-desc">Production plan</div>
+    </div>
+    <div class="step">
+      <div class="step-number">04</div>
+      <div class="step-name">Campaign</div>
+      <div class="step-desc">Market launch</div>
+    </div>
+    <div class="step">
+      <div class="step-number">05</div>
+      <div class="step-name">Preview</div>
+      <div class="step-desc">Final review</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="side-label">FASTPRODUCTION</div>
+      <a class="side-link" href="dashboard.html">▦ Command Center</a>
+      <a class="side-link" href="marketplace.html">◈ Marketplace</a>
+  <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span class="nav-text">Scope</span></a>
+      <a class="side-link" href="employees.html">♙ Employees</a>
+      <a class="side-link" href="equipment.html">▣ Equipment</a>
+      <a class="side-link" href="profile.html">◎ My Profile</a>
+      <div class="side-label">PROJECT BUILDER</div>
+      <div class="side-link active">01 — Design</div>
+      <div class="side-link">02 — Product</div>
+      <div class="side-link">03 — Cost Planning</div>
+      <div class="side-link">04 — Campaign</div>
+      <div class="side-link">05 — Preview</div>
+    </aside>
+
+    <div class="content">
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Design Identity</h2>
+            <div class="section-desc">Give your design a name and visual identity.</div>
+          </div>
+          <span class="tag">01 / DESIGN</span>
+        </div>
+
+        <div class="field-grid">
+          <div class="field full">
+            <label>Design / Project Name</label>
+            <input placeholder="Example: Essential Oversized Tee">
+          </div>
+
+          <div class="field">
+            <label>Designer / Brand</label>
+            <input placeholder="Brand or creator name">
+          </div>
+
+          <div class="field">
+            <label>Product Category</label>
+            <select>
+              <option value="">Select category</option>
+              <option>T-Shirt</option>
+              <option>Shirt</option>
+              <option>Hoodie</option>
+              <option>Jacket</option>
+              <option>Pants</option>
+              <option>Dress</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Design Description</label>
+            <textarea placeholder="Describe your concept, inspiration, and product details..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Visual Assets</h2>
+            <div class="section-desc">Prepare the visual references for your product.</div>
+          </div>
+          <span class="tag">UPLOAD AREA</span>
+        </div>
+
+        <div class="upload-grid">
+          <div class="upload">
+            <strong>+</strong>
+            Front View
+            <span>Product front design</span>
+          </div>
+          <div class="upload">
+            <strong>+</strong>
+            Back View
+            <span>Product back design</span>
+          </div>
+          <div class="upload">
+            <strong>+</strong>
+            Detail View
+            <span>Close-up references</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Product Specification</h2>
+            <div class="section-desc">Define the actual product that will be manufactured.</div>
+          </div>
+          <span class="tag">02 / PRODUCT</span>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Main Material</label>
+            <input placeholder="Example: Cotton Combed 24s">
+          </div>
+          <div class="field">
+            <label>Color Variant</label>
+            <input placeholder="Black, White, Navy...">
+          </div>
+          <div class="field">
+            <label>Available Sizes</label>
+            <input placeholder="S, M, L, XL, XXL">
+          </div>
+          <div class="field">
+            <label>Production Technique</label>
+            <input placeholder="Obras, jahit, sablon...">
+          </div>
+          <div class="field full">
+            <label>Construction & Finishing Notes</label>
+            <textarea placeholder="Describe stitching, pattern, finishing, and other requirements..."></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Production Cost Planning</h2>
+            <div class="section-desc">Build a production budget based on real product requirements.</div>
+          </div>
+          <span class="tag">03 / COST</span>
+        </div>
+
+        <div class="cost-placeholder">
+          <strong>PRODUCTION COST ENGINE</strong>
+          Cost breakdown, material consumption, labor, production quantity,
+          unit cost, and pricing calculation will be built here.
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Campaign Configuration</h2>
+            <div class="section-desc">Set how your design enters the marketplace.</div>
+          </div>
+          <span class="tag">04 / CAMPAIGN</span>
+        </div>
+
+        <div class="campaign-info">
+          <div>
+            <strong>DESIGN SHOWCASE</strong>
+            <div class="section-desc">Initial design display period</div>
+          </div>
+          <strong>24 HOURS</strong>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label>Minimum Production Quantity</label>
+            <input type="number" min="1" placeholder="Example: 200">
+          </div>
+          <div class="field">
+            <label>Maximum Production Quantity</label>
+            <input type="number" min="1" placeholder="Optional">
+          </div>
+          <div class="field">
+            <label>Interest Collection Period</label>
+            <input type="number" min="1" placeholder="Number of days">
+          </div>
+          <div class="field">
+            <label>PO Payment Period</label>
+            <input type="number" min="1" placeholder="Number of days">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <h2>Marketplace Preview</h2>
+            <div class="section-desc">Review how your project will appear in the marketplace.</div>
+          </div>
+          <span class="tag">05 / PREVIEW</span>
+        </div>
+
+        <div class="cost-placeholder">
+          <strong>PROJECT PREVIEW</strong>
+          Your design card, project information, production target,
+          and campaign status will appear here.
+        </div>
+
+        <div class="actions">
+          <button class="btn">Save Draft</button>
+          <button class="btn primary">Continue to Preview →</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    FASTPRODUCTION — FROM DESIGN TO PRODUCTION.
+  </div>
+
+</main>
+
+</body>
+</html>
