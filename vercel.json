@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/login.html",
+      "destination": "/pages/login.html"
+    }
+  ]
+}
