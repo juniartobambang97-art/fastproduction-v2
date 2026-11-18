@@ -271,42 +271,19 @@ footer .container{display:flex;justify-content:space-between;gap:15px;flex-wrap:
  </div>
 </footer>
 
-<script>
-const search = document.getElementById('search');
-const cards = [...document.querySelectorAll('.card')];
-const tabs = [...document.querySelectorAll('.tab')];
-const empty = document.getElementById('empty');
-const count = document.getElementById('count');
-let active = 'all';
+<!-- =========================================
+     SCRIPT IMPORTS (FIXED)
+     ========================================= -->
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-function render(){
- const keyword = search.value.toLowerCase().trim();
- let visible = 0;
+<!-- Project modules -->
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/marketplace.js"></script>
 
- cards.forEach(card => {
-  const stageMatch = active === 'all' || card.dataset.stage === active;
-  const textMatch = card.dataset.search.includes(keyword) ||
-                    card.innerText.toLowerCase().includes(keyword);
-  const show = stageMatch && textMatch;
-  card.style.display = show ? '' : 'none';
-  if(show) visible++;
- });
-
- empty.style.display = visible ? 'none' : 'block';
- count.textContent = visible + ' projects';
-}
-
-tabs.forEach(tab => {
- tab.addEventListener('click', () => {
-  active = tab.dataset.filter;
-  tabs.forEach(t => t.classList.toggle('active', t === tab));
-  render();
- });
-});
-
-search.addEventListener('input',render);
-document.getElementById('searchBtn').addEventListener('click',render);
-</script>
+<!-- Transition -->
 <script src="../assets/js/transition.js"></script>
 </body>
 </html>
