@@ -1389,9 +1389,9 @@ navLinks.querySelectorAll("a").forEach(link => {
 <script>
 (() => {
   const IDLE_TIME = 10000;
-  const ATTACK_TIME = 5000;
+  const ATTACK_TIME = 3000;
   const HP_MAX = 100000;
-  const DAMAGE = [10000, 20000, 30000, 50000];
+  const DAMAGE = [1000, 2000];
 
   const hud = document.getElementById("fp-survival-hud");
   const alertBox = document.getElementById("fp-monster-alert");
@@ -1431,17 +1431,12 @@ navLinks.querySelectorAll("a").forEach(link => {
     setTimeout(() => damageNode.remove(), 1000);
 
     const debuffTray = document.getElementById("fp-debuffs");
-    debuffTray.innerHTML = "";
     const icons = ["🥴","💀","🕸️","🔥","⚡","☠️","🤢","🩸","😵","🧟"];
-    let count = 0;
-    const debuffBurst = setInterval(() => {
-      const icon = document.createElement("span");
-      icon.className = "fp-debuff-icon";
-      icon.textContent = icons[Math.floor(Math.random() * icons.length)];
-      debuffTray.appendChild(icon);
-      count++;
-      if (count >= 18) clearInterval(debuffBurst);
-    }, 100);
+    const icon = document.createElement("span");
+    icon.className = "fp-debuff-icon";
+    icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+    icon.title = "Monster debuff";
+    debuffTray.appendChild(icon);
 
     updateHUD();
 
