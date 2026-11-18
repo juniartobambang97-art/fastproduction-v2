@@ -56,49 +56,6 @@ textarea{min-height:100px;resize:vertical}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.wrap{padding:25px 14px 60px}.hero{align-items:start;flex-direction:column}.stats{grid-template-columns:1fr 1fr}.grid,.formgrid,.roomgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.top{padding:0 15px}}
 </style>
-
-<style id="FP_SCOPE_DEAL_CHAT_V1">
-#fpDealLauncher{position:fixed;right:22px;bottom:22px;z-index:9998;background:#c5f36b;color:#10140c;border:0;border-radius:14px;padding:14px 20px;font-weight:900;box-shadow:0 12px 35px #0008;cursor:pointer;font-family:inherit}
-#fpDealLauncher span{margin-left:8px}
-#fpDealOverlay{display:none;position:fixed;inset:0;background:#000b;z-index:9999;align-items:center;justify-content:center;padding:14px}
-#fpDealOverlay.open{display:flex}
-#fpDealPanel{width:min(1100px,100%);height:min(760px,94vh);background:#111612;color:#e9eee5;border:1px solid #394238;border-radius:18px;display:flex;flex-direction:column;overflow:hidden;font-family:inherit}
-#fpDealPanel *{box-sizing:border-box}
-.fpdh{padding:16px 20px;border-bottom:1px solid #303a30;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.fpdh small,.fp-muted{color:#9ba797;font-size:12px}
-.fpdb{display:grid;grid-template-columns:250px 1fr 260px;min-height:0;flex:1}
-.fp-side,.fp-info{padding:16px;border-right:1px solid #303a30;overflow:auto}
-.fp-info{border-right:0;border-left:1px solid #303a30}
-.fp-chat{display:flex;flex-direction:column;min-width:0;min-height:0}
-.fp-convo{padding:13px;border:1px solid #354034;border-radius:12px;margin-top:10px;cursor:pointer}
-.fp-convo.active{border-color:#c5f36b;background:#20291b}
-.fp-tag{font-size:10px;letter-spacing:1px;color:#c5f36b;font-weight:800}
-.fp-chatlog{padding:18px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:13px}
-.fp-msg{max-width:82%;padding:12px 14px;border-radius:13px;background:#222b23;border:1px solid #354034;font-size:13px;line-height:1.5}
-.fp-msg.mine{align-self:flex-end;background:#29351e;border-color:#647d3d}
-.fp-msg small{display:block;color:#9ba797;margin-bottom:5px}
-.fp-compose{display:flex;gap:8px;padding:13px;border-top:1px solid #303a30}
-.fp-compose input,.fp-field{width:100%;min-width:0;background:#1b231c;border:1px solid #3a4739;color:#fff;border-radius:10px;padding:12px;font:inherit}
-.fp-btn{border:0;border-radius:10px;padding:10px 13px;background:#c5f36b;color:#11180d;font-weight:800;cursor:pointer}
-.fp-btn.secondary{background:#293329;color:#e9eee5;border:1px solid #465344}
-.fp-btn:disabled{opacity:.4;cursor:not-allowed}
-.fp-card{padding:14px;border:1px solid #3b4939;border-radius:13px;margin-top:12px;background:#192119}
-.fp-card h4{margin:0 0 10px}
-.fp-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-.fp-actions .fp-btn{font-size:11px}
-.fp-close{background:none;border:0;color:#e9eee5;font-size:24px;cursor:pointer}
-.fp-status{display:inline-block;background:#29351e;color:#c5f36b;padding:5px 9px;border-radius:20px;font-size:10px;font-weight:800}
-@media(max-width:760px){
- #fpDealOverlay{padding:0}
- #fpDealPanel{height:100%;width:100%;border-radius:0}
- .fpdb{grid-template-columns:1fr}
- .fp-side{display:none}
- .fp-info{display:none}
- .fp-chatlog{padding:13px}
- .fp-msg{max-width:92%}
- #fpDealLauncher{right:14px;bottom:14px}
-}
-</style>
 </head>
 <body>
 <header class="top">
@@ -125,9 +82,9 @@ textarea{min-height:100px;resize:vertical}
 <div class="stat"><span>NETWORK</span><strong>GLOBAL</strong><span>Open discovery</span></div>
 </div>
 <div class="filters">
-<input id="search" placeholder="Search project, product, location..." oninput="render()">
-<select id="category" onchange="render()"><option value="">All categories</option><option>T-Shirt</option><option>Shirt</option><option>Hoodie</option><option>Jacket</option><option>Pants</option><option>Other</option></select>
-<select id="statusFilter" onchange="render()"><option value="">All status</option><option value="open">Open for application</option><option value="selected">Partner selected</option></select>
+<input id="search" placeholder="Search project, product, location...">
+<select id="category"><option value="">All categories</option><option>T-Shirt</option><option>Shirt</option><option>Hoodie</option><option>Jacket</option><option>Pants</option><option>Other</option></select>
+<select id="statusFilter"><option value="">All status</option><option value="open">Open for application</option><option value="selected">Partner selected</option></select>
 </div>
 <div class="grid" id="scopeList"></div>
 </section>
@@ -178,198 +135,16 @@ textarea{min-height:100px;resize:vertical}
 
 <div class="modal" id="roomModal"><div class="modalbox"><div class="modalhead"><div><div class="eyebrow">PRIVATE PARTNERSHIP SPACE</div><h2 id="roomTitle">Cooperation Room</h2></div><button class="btn" onclick="closeModal('roomModal')">✕</button></div><div id="roomContent"></div></div></div>
 
-<script>
-const K='fp_v2_scopes', A='fp_v2_scope_applications', R='fp_v2_scope_rooms';
-const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}};
-const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
-let scopes=read(K),apps=read(A),rooms=read(R),currentRoom=null;
-const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const money=s=>s||'Negotiable';
-function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===v));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='applications')renderApps();if(v==='rooms')renderRooms();window.scrollTo({top:0,behavior:'smooth'})}
-function modal(id){document.getElementById(id).classList.add('open')}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function render(){
-let q=document.getElementById('search').value.toLowerCase(),cat=document.getElementById('category').value,st=document.getElementById('statusFilter').value;
-let list=scopes.filter(s=>(!q||(s.title+' '+s.brand+' '+s.location+' '+s.details).toLowerCase().includes(q))&&(!cat||s.category===cat)&&(!st||(st==='open'?!s.selected:s.selected)));
-document.getElementById('totalScopes').textContent=scopes.length;
-document.getElementById('totalApps').textContent=apps.length;
-document.getElementById('totalRooms').textContent=rooms.length;
-document.getElementById('appCount').textContent=apps.length?' · '+apps.length:'';
-document.getElementById('scopeList').innerHTML=list.length?list.map(s=>`<article class="card"><span class="tag">${esc(s.category)} · ${s.selected?'PARTNER SELECTED':'OPEN SCOPE'}</span><h3>${esc(s.title)}</h3><p>${esc(s.details).slice(0,145)}${s.details.length>145?'…':''}</p><div class="meta"><div><small>QUANTITY</small><b>${Number(s.qty).toLocaleString()} pcs</b></div><div><small>LOCATION</small><b>${esc(s.location||'Flexible')}</b></div><div><small>BRAND / CLIENT</small><b>${esc(s.brand)}</b></div><div><small>BUDGET</small><b>${esc(money(s.budget))}</b></div></div><div class="card-foot"><span class="mono">${apps.filter(a=>a.scopeId===s.id).length} APPLICATION(S)</span><button class="btn" onclick="detail('${s.id}')">View Scope →</button></div></article>`).join(''):'<div class="empty" style="grid-column:1/-1">Belum ada Scope yang cocok. Buat Scope pertama atau ubah filter.</div>';
-}
-document.getElementById('scopeForm').onsubmit=e=>{
-e.preventDefault();let f=new FormData(e.target),s=Object.fromEntries(f);
-s.id=id();s.qty=Number(s.qty);s.owner='You';s.created=new Date().toISOString();s.selected=false;
-scopes.unshift(s);save(K,scopes);e.target.reset();render();show('explore');alert('Scope berhasil dipublikasikan di discovery.');
-};
-function detail(sid){
-let s=scopes.find(x=>x.id===sid);if(!s)return;
-document.getElementById('detailTitle').textContent=s.title;
-let related=apps.filter(a=>a.scopeId===sid);
-document.getElementById('detailBody').innerHTML=`<span class="tag">${esc(s.category)}</span><p class="sub">${esc(s.details)}</p><div class="meta"><div><small>CLIENT</small><b>${esc(s.brand)}</b></div><div><small>QUANTITY</small><b>${s.qty} pcs</b></div><div><small>LOCATION</small><b>${esc(s.location||'Flexible')}</b></div><div><small>TARGET</small><b>${esc(s.deadline||'Not specified')}</b></div><div><small>MATERIAL</small><b>${esc(s.material||'Discuss together')}</b></div><div><small>BUDGET</small><b>${esc(money(s.budget))}</b></div></div><p class="sub">Reference: ${s.reference?`<a style="color:var(--lime)" href="${esc(s.reference)}" target="_blank">Open reference</a>`:'Not provided'}</p><div class="actions">${!s.selected?`<button class="btn primary" onclick="openApply('${s.id}')">Apply / Send Proposal</button>`:''}<button class="btn" onclick="closeModal('detailModal');show('applications')">View applications (${related.length})</button></div>`;
-modal('detailModal');
-}
-function openApply(sid){closeModal('detailModal');document.querySelector('#applyForm [name=scopeId]').value=sid;modal('applyModal')}
-document.getElementById('applyForm').onsubmit=e=>{
-e.preventDefault();let f=Object.fromEntries(new FormData(e.target));f.id=id();f.created=new Date().toISOString();f.status='pending';apps.unshift(f);save(A,apps);e.target.reset();closeModal('applyModal');render();alert('Application berhasil dikirim.');
-};
-function renderApps(){
-let el=document.getElementById('applicationList');
-el.innerHTML=apps.length?apps.map(a=>{let s=scopes.find(x=>x.id===a.scopeId);return `<div class="item"><div class="item-head"><div><span class="tag">${esc(a.status)}</span><h3>${esc(a.company)}</h3><p>For: ${esc(s?.title||'Scope unavailable')}</p></div><b>${esc(a.price||'Price TBD')}</b></div><p>${esc(a.message)}</p><p>Capacity: ${esc(a.capacity||'-')} · Duration: ${esc(a.duration||'-')}</p>${a.status==='pending'&&s&&!s.selected?`<button class="btn primary" onclick="accept('${a.id}')">Select this manufacturer</button>`:''}${a.roomId?`<button class="btn" onclick="openRoom('${a.roomId}')">Open Cooperation Room</button>`:''}</div>`}).join(''):'<div class="empty">Belum ada lamaran. Konveksi yang melamar akan muncul di sini.</div>';
-}
-function accept(aid){
-let a=apps.find(x=>x.id===aid),s=scopes.find(x=>x.id===a.scopeId);if(!a||!s)return;
-if(!confirm('Pilih '+a.company+' sebagai calon mitra dan buka Cooperation Room?'))return;
-s.selected=true;a.status='selected';
-let room={id:id(),scopeId:s.id,applicationId:a.id,title:s.title,company:a.company,client:s.brand,status:'discussion',messages:[{by:'System',text:'Cooperation Room dibuat. Bahas detail, revisi, harga final, dan kesepakatan di sini.',time:new Date().toISOString()}],created:new Date().toISOString()};
-rooms.unshift(room);a.roomId=room.id;save(K,scopes);save(A,apps);save(R,rooms);render();renderApps();show('rooms');openRoom(room.id);
-}
-function renderRooms(){
-document.getElementById('roomList').innerHTML=rooms.length?rooms.map(r=>`<div class="panel"><div class="item-head"><div><span class="tag">${esc(r.status)}</span><h2>${esc(r.title)}</h2><p class="sub">${esc(r.client)} ↔ ${esc(r.company)}</p></div><button class="btn primary" onclick="openRoom('${r.id}')">Enter Room →</button></div></div>`).join(''):'<div class="empty">Belum ada kerja sama aktif. Pilih salah satu lamaran untuk membuka ruang kerja sama.</div>';
-}
-function openRoom(rid){
-currentRoom=rooms.find(x=>x.id===rid);if(!currentRoom)return;
-document.getElementById('roomTitle').textContent=currentRoom.title;
-roomContent();
-modal('roomModal');
-}
-function roomContent(){
-let r=currentRoom;
-document.getElementById('roomContent').innerHTML=`<div class="roomgrid"><div><h3>Discussion & Handover</h3><div id="messages">${r.messages.map(m=>`<div class="note"><small>${esc(m.by)} · ${new Date(m.time).toLocaleString()}</small><p>${esc(m.text)}</p></div>`).join('')}</div><form id="messageForm"><div class="field"><label>Write a message / update</label><textarea name="text" required placeholder="Diskusikan detail produksi, revisi, atau update progres..."></textarea></div><button class="btn primary" style="margin-top:10px">Send message</button></form></div><div><h3>Cooperation Status</h3><p class="sub">Status hanya berubah berdasarkan kesepakatan kedua pihak.</p><select id="roomStatus"><option value="discussion">Discussion</option><option value="negotiation">Negotiation</option><option value="agreement">Agreement</option><option value="production">In Production</option><option value="completed">Completed</option></select><button class="btn" style="margin-top:9px;width:100%" onclick="updateRoomStatus()">Update status</button><div class="note"><small>PARTIES</small><p>Client: ${esc(r.client)}<br>Manufacturer: ${esc(r.company)}</p></div><div class="note"><small>PROJECT</small><p>${esc(r.title)}</p></div></div></div>`;
-document.getElementById('roomStatus').value=r.status;
-document.getElementById('messageForm').onsubmit=e=>{e.preventDefault();let t=new FormData(e.target).get('text');r.messages.push({by:'You',text:t,time:new Date().toISOString()});save(R,rooms);roomContent()};
-}
-function updateRoomStatus(){currentRoom.status=document.getElementById('roomStatus').value;save(R,rooms);renderRooms();roomContent()}
-render();renderApps();renderRooms();
-</script>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<button id="fpDealLauncher" type="button">◉ <span>DEAL CHAT</span></button>
-<div id="fpDealOverlay">
- <section id="fpDealPanel">
-  <header class="fpdh">
-   <div>
-    <div class="fp-tag">FASTPRODUCTION / DEAL ROOM</div>
-    <strong>Project Conversation</strong><br>
-    <small>Negosiasi, proposal, dan pembayaran dalam satu ruang</small>
-   </div>
-   <button class="fp-close" id="fpDealClose" aria-label="Tutup">×</button>
-  </header>
-  <div class="fpdb">
-   <aside class="fp-side">
-    <div class="fp-tag">PROJECTS</div>
-    <div class="fp-convo active">
-     <strong id="fpProjectName">Scope Production</strong>
-     <div class="fp-muted">Client ↔ Konveksi</div>
-     <div style="margin-top:8px"><span class="fp-status" id="fpSideStatus">NEGOTIATION</span></div>
-    </div>
-    <div class="fp-muted" style="margin-top:18px">Percakapan terikat pada proyek Scope yang sedang dibuka.</div>
-   </aside>
-   <main class="fp-chat">
-    <div class="fpdh">
-     <div><strong id="fpChatTitle">Client & Konveksi</strong><br><small>Project Deal Room</small></div>
-     <span class="fp-status" id="fpHeaderStatus">NEGOTIATION</span>
-    </div>
-    <div class="fp-chatlog" id="fpChatLog"></div>
-    <form class="fp-compose" id="fpChatForm">
-     <input id="fpChatInput" placeholder="Tulis pesan atau negosiasi..." autocomplete="off">
-     <button class="fp-btn" type="submit">Kirim</button>
-    </form>
-   </main>
-   <aside class="fp-info">
-    <div class="fp-tag">DEAL SUMMARY</div>
-    <div class="fp-card">
-     <h4>Project Proposal</h4>
-     <div class="fp-muted">Nilai kesepakatan</div>
-     <div style="font-size:23px;font-weight:900;margin:5px 0" id="fpDealAmount">Rp22.500.000</div>
-     <div class="fp-muted" id="fpDealDetail">500 pcs · 21 hari</div>
-     <div class="fp-muted" style="margin-top:9px">Status proposal</div>
-     <strong id="fpProposalStatus">Menunggu persetujuan</strong>
-     <div class="fp-actions">
-      <button class="fp-btn" id="fpAccept">Terima</button>
-      <button class="fp-btn secondary" id="fpRevision">Minta revisi</button>
-     </div>
-    </div>
-    <div class="fp-card">
-     <h4>Payment Request</h4>
-     <div class="fp-muted">Pengajuan termin dari pekerja</div>
-     <input class="fp-field" id="fpPaymentAmount" value="11250000" inputmode="numeric" style="margin-top:10px">
-     <select class="fp-field" id="fpPaymentType" style="margin-top:8px">
-      <option>DP 50%</option><option>Termin produksi</option><option>Pelunasan</option>
-     </select>
-     <button class="fp-btn" id="fpRequestPayment" style="width:100%;margin-top:9px">Ajukan pembayaran</button>
-     <div class="fp-muted" id="fpPaymentStatus" style="margin-top:10px">Belum ada pengajuan pembayaran.</div>
-    </div>
-    <div class="fp-card">
-     <h4>Production Workspace</h4>
-     <div class="fp-muted">Pantau proses produksi bersama client dan konveksi.</div>
-     <a href="workforce.html" class="fp-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px">Buka Workspace ↗</a>
-    </div>
-    <div class="fp-muted" style="margin-top:12px;line-height:1.5">Prototype: data percakapan tersimpan di browser ini. Pembayaran dan escrow belum terhubung ke dana sungguhan.</div>
-   </aside>
-  </div>
- </section>
-</div>
+<!-- Project modules -->
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/scope.js"></script>
 
-<script id="FP_SCOPE_DEAL_CHAT_SCRIPT">
-(()=>{
- const $=id=>document.getElementById(id);
- const key='fp_scope_deal_chat_v1';
- let state;
- try{state=JSON.parse(localStorage.getItem(key)||'null')}catch(e){}
- if(!state) state={
-  messages:[
-   {from:'Client',text:'Halo, kami ingin memproduksi 500 pcs. Apakah kapasitas produksi tersedia?'},
-   {from:'Konveksi',text:'Tersedia. Estimasi pengerjaan 21 hari. Kami bisa diskusikan spesifikasi dan harga di sini.'}
-  ],
-  status:'NEGOTIATION',
-  proposal:'Menunggu persetujuan',
-  payment:'Belum ada pengajuan pembayaran.'
- };
- const save=()=>localStorage.setItem(key,JSON.stringify(state));
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function render(){
-  $('fpChatLog').innerHTML=state.messages.map(m=>`<div class="fp-msg ${m.from==='Client'?'mine':''}"><small>${esc(m.from)} · ${esc(m.time||'')}</small>${esc(m.text)}</div>`).join('');
-  $('fpChatLog').scrollTop=$('fpChatLog').scrollHeight;
-  $('fpHeaderStatus').textContent=state.status;
-  $('fpSideStatus').textContent=state.status;
-  $('fpProposalStatus').textContent=state.proposal;
-  $('fpPaymentStatus').textContent=state.payment;
- }
- function add(from,text){
-  state.messages.push({from,text,time:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});
-  save();render();
- }
- $('fpDealLauncher').onclick=()=>$('fpDealOverlay').classList.add('open');
- $('fpDealClose').onclick=()=>$('fpDealOverlay').classList.remove('open');
- $('fpDealOverlay').addEventListener('click',e=>{if(e.target===$('fpDealOverlay'))$('fpDealOverlay').classList.remove('open')});
- $('fpChatForm').onsubmit=e=>{
-  e.preventDefault();let v=$('fpChatInput').value.trim();if(!v)return;
-  add('Client',v);$('fpChatInput').value='';
- };
- $('fpAccept').onclick=()=>{
-  state.proposal='Proposal diterima';
-  state.status='AGREEMENT';
-  add('System','Client menerima proposal kerja. Kesepakatan tercatat di Deal Room.');
- };
- $('fpRevision').onclick=()=>{
-  state.proposal='Revisi diminta';
-  state.status='NEGOTIATION';
-  add('Client','Kami meminta revisi proposal. Mari sesuaikan penawaran sebelum menyepakati pekerjaan.');
- };
- $('fpRequestPayment').onclick=()=>{
-  let amount=Number($('fpPaymentAmount').value.replace(/[^\d]/g,''));
-  if(!amount||amount<1){alert('Masukkan nominal pembayaran yang valid.');return}
-  let type=$('fpPaymentType').value;
-  state.payment=type+' · Rp'+amount.toLocaleString('id-ID')+' · Menunggu pembayaran client';
-  state.status='PAYMENT REQUESTED';
-  add('Konveksi','Mengajukan '+type+' sebesar Rp'+amount.toLocaleString('id-ID')+'. Menunggu konfirmasi client.');
-  save();render();
- };
- const title=document.querySelector('h1');
- if(title && title.textContent.trim()) $('fpProjectName').textContent=title.textContent.trim().slice(0,38);
- render();
-})();
-</script>
+<!-- Transition -->
 <script src="../assets/js/transition.js"></script>
-</body></html>
+</body>
+</html>
