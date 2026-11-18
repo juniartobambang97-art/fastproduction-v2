@@ -59,4 +59,5 @@ $('#fPending').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new Form
 function resolvePending(pid){let a=P(),p=a.find(x=>x.id===pid);if(p){p.status='resolved';write(K.pending,a);log('Pending diselesaikan','-',p.product,0,p.material);render();say('Status diperbarui')}}
 document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));render();
 </script><script src="../assets/js/transition.js"></script>
+<script src="../assets/js/prayer-guard.js"></script>
 </body></html>
