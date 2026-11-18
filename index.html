@@ -1389,7 +1389,7 @@ navLinks.querySelectorAll("a").forEach(link => {
 <script>
 (() => {
   const IDLE_TIME = 10000;
-  const ATTACK_TIME = 3000;
+  const ATTACK_TIME = 6000;
   const HP_MAX = 100000;
   const DAMAGE = [1000, 2000];
 
@@ -1417,40 +1417,48 @@ navLinks.querySelectorAll("a").forEach(link => {
       Math.min(exp, 100) + "%";
   }
 
-  function hit() {
+  
+function hit() {
+  if (dead) return;
+
+  const DAMAGE = [1000, 2000, 3000, 5000, 4000];
+  const icons = ["🥴","💀","🕸️","🔥","⚡","☠️","🤢","🩸","😵","🧟"];
+  const debuffTray = document.getElementById("fp-debuffs");
+
+  let hitCount = 0;
+
+  function monsterStrike() {
     if (dead) return;
 
-    const damage = DAMAGE[Math.floor(Math.random() * DAMAGE.length)];
+    const damage = DAMAGE[
+      Math.floor(Math.random() * DAMAGE.length)
+    ];
+
     hp = Math.max(0, hp - damage);
-    exp = Math.min(100, exp + 20);
+    exp = Math.min(100, exp + 2);
+    hitCount++;
+
+    updateHUD();
 
     const damageNode = document.createElement("div");
     damageNode.id = "fp-damage-number";
     damageNode.textContent = "-" + damage.toLocaleString();
+    damageNode.style.top = (35 + Math.random() * 25) + "%";
+    damageNode.style.left = (20 + Math.random() * 60) + "%";
     document.body.appendChild(damageNode);
-    setTimeout(() => damageNode.remove(), 1000);
+    setTimeout(() => damageNode.remove(), 900);
 
-    const debuffTray = document.getElementById("fp-debuffs");
-    const icons = ["🥴","💀","🕸️","🔥","⚡","☠️","🤢","🩸","😵","🧟"];
     const icon = document.createElement("span");
     icon.className = "fp-debuff-icon";
     icon.textContent = icons[Math.floor(Math.random() * icons.length)];
-    icon.title = "Monster debuff";
     debuffTray.appendChild(icon);
-
-    updateHUD();
 
     flash.classList.remove("hit");
     void flash.offsetWidth;
     flash.classList.add("hit");
 
+    alertBox.textContent = "⚠ MONSTER HIT " + hitCount + "/10 ⚠";
     alertBox.style.display = "block";
-    document.getElementById("fp-battle-status").textContent =
-      "💀 HERO IS UNDER ATTACK!";
-
-    setTimeout(() => {
-      if (!dead) alertBox.style.display = "none";
-    }, 1200);
 
     if (hp <= 0) {
       dead = true;
@@ -1461,8 +1469,22 @@ navLinks.querySelectorAll("a").forEach(link => {
         "FINAL EXP: " + exp;
 
       gameover.style.display = "flex";
+      return;
+    }
+
+    if (hitCount < 10) {
+      setTimeout(monsterStrike, 180);
+    } else {
+      alertBox.textContent = "⚠ NEXT WAVE IN 3 SECONDS ⚠";
+      setTimeout(() => {
+        if (!dead) alertBox.style.display = "none";
+      }, 2500);
     }
   }
+
+  monsterStrike();
+}
+
 
   function startBattle() {
     if (gameStarted || dead) return;
