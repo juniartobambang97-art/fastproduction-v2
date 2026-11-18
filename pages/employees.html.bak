@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employees — FastProduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#10120f;--panel:#181b16;--panel2:#20241d;
+  --line:#30362a;--text:#f0f2e9;--muted:#92998a;
+  --lime:#c5f36b;--orange:#f1b66c;--red:#f07878;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,sans-serif}
+a{color:inherit;text-decoration:none}
+button,input,select{font:inherit}
+.shell{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#151812;border-right:1px solid var(--line);padding:27px 18px;flex-shrink:0}
+.logo{font-size:18px;font-weight:800;letter-spacing:-1px}
+.logo span{color:var(--lime)}
+.nav-label{font:10px 'DM Mono';color:#78806e;letter-spacing:1.5px;margin:32px 10px 12px}
+.nav{display:block;padding:11px 12px;border-radius:9px;color:#aeb4a4;font-size:12px;margin:3px 0}
+.nav:hover,.nav.active{background:#252b1e;color:var(--lime)}
+.nav.active{border:1px solid #39452a}
+.sidebar-bottom{margin-top:35px;padding:15px 10px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.main{flex:1;min-width:0;padding:35px 4%;max-width:1600px}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:35px}
+.eyebrow{font:10px 'DM Mono';color:var(--lime);letter-spacing:2px}
+h1{font-size:clamp(27px,4vw,39px);letter-spacing:-2px;margin:9px 0}
+.subtitle{color:var(--muted);font-size:12px;line-height:1.8}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:12px 17px;border-radius:9px;font-size:11px;font-weight:800;cursor:pointer}
+.btn.primary{background:var(--lime);color:#151812;border-color:var(--lime)}
+.btn:hover{filter:brightness(1.1)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:28px}
+.stat{background:var(--panel);border:1px solid var(--line);padding:19px;border-radius:13px}
+.stat-label{font-size:10px;color:var(--muted)}
+.stat-value{font-size:29px;font-weight:800;letter-spacing:-1px;margin:10px 0 4px}
+.stat-note{font:9px 'DM Mono';color:#8d9681}
+.toolbar{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:25px 0 18px}
+.search{flex:1;min-width:180px;max-width:380px}
+input,select{background:#171a14;color:var(--text);border:1px solid var(--line);padding:12px;border-radius:8px;outline:none;font-size:11px;width:100%}
+input:focus,select:focus{border-color:var(--lime)}
+.filters{display:flex;gap:7px;flex-wrap:wrap}
+.filter{background:transparent;border:1px solid var(--line);color:var(--muted);padding:10px 13px;border-radius:8px;font-size:10px;cursor:pointer}
+.filter.active{color:var(--lime);border-color:#657d3d;background:#252d1c}
+.directory-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 13px}
+.directory-head h2{font-size:15px;margin:0}
+.directory-head span{font:10px 'DM Mono';color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.employee{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:19px;min-width:0}
+.employee-top{display:flex;align-items:center;gap:13px}
+.avatar{width:43px;height:43px;border-radius:12px;background:#303b24;color:var(--lime);display:grid;place-items:center;font-size:16px;font-weight:800;flex-shrink:0}
+.person{min-width:0;flex:1}
+.person strong{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.person small{font-size:10px;color:var(--muted)}
+.status{font:9px 'DM Mono';padding:6px 8px;border-radius:20px;background:#28351e;color:var(--lime)}
+.status.inactive{background:#392323;color:var(--red)}
+.status.leave{background:#3b3020;color:var(--orange)}
+.employee-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 0;border-top:1px solid var(--line);margin-top:17px}
+.info-label{font:9px 'DM Mono';color:var(--muted);margin-bottom:6px}
+.info-value{font-size:11px;font-weight:700;overflow-wrap:anywhere}
+.skills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.skill{font-size:9px;padding:6px 8px;border:1px solid #39402f;border-radius:5px;color:#c7d5ac}
+.card-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:13px}
+.source{font:9px 'DM Mono';color:var(--muted)}
+.source b{color:var(--lime);font-weight:500}
+.card-foot button{background:none;border:0;color:var(--lime);font-size:10px;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;border:1px dashed #414837;border-radius:13px;padding:55px 20px;color:var(--muted)}
+.empty strong{display:block;color:var(--text);font-size:15px;margin-bottom:8px}
+.empty p{font-size:11px;line-height:1.8}
+.note{margin-top:25px;padding:15px 17px;border:1px solid var(--line);background:#171a14;border-radius:10px;color:var(--muted);font-size:10px;line-height:1.8}
+.note b{color:var(--lime)}
+.modal-backdrop{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:15px;z-index:10}
+.modal-backdrop.open{display:flex}
+.modal{width:100%;max-width:570px;max-height:90vh;overflow:auto;background:#191c16;border:1px solid #424b35;border-radius:15px;padding:24px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.modal-head h2{font-size:18px;margin:0}
+.close{background:none;border:0;color:var(--muted);font-size:22px;cursor:pointer}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field.full{grid-column:1/-1}
+.field label{display:block;font-size:10px;color:var(--muted);margin-bottom:7px}
+.checks{display:flex;gap:8px;flex-wrap:wrap}
+.check{background:#20241d;border:1px solid var(--line);padding:8px 10px;border-radius:7px;font-size:10px;color:#d3d9c9}
+.check input{width:auto;margin-right:5px;accent-color:var(--lime)}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
+@media(max-width:850px){.sidebar{width:195px}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+.shell{display:block}.sidebar{width:100%;padding:15px;display:flex;gap:8px;overflow-x:auto;align-items:center;border-right:0;border-bottom:1px solid var(--line)}
+.logo{white-space:nowrap;margin-right:12px}.nav-label,.sidebar-bottom{display:none}
+.nav{white-space:nowrap;padding:9px;font-size:10px}
+.main{padding:25px 16px}.grid{grid-template-columns:1fr}
+.topline{align-items:flex-start}.topline .btn{padding:10px;font-size:10px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <a class="logo" href="../index.html">FAST<span>PRODUCTION</span></a>
+  <div class="nav-label">WORKSPACE</div>
+  <a class="nav" href="dashboard.html">▦ Command Center</a>
+  <a class="nav" href="marketplace.html">◈ Marketplace</a>
+  <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span class="nav-text">Scope</span></a>
+  <a class="nav" href="create-design.html">✳ Design Studio</a>
+  <a class="nav" href="lab-konveksibos.html">⚙ Lab Konveksibos</a>
+  <a class="nav" href="your-loker.html">♙ Your Loker</a>
+  <div class="nav-label">MANAGEMENT</div>
+  <a class="nav" href="equipment.html">▣ Equipment</a>
+  <a class="nav active" href="employees.html">♙ Employees</a>
+  <a class="nav" href="profile.html">◎ My Profile</a>
+  <div class="nav-label">FINANCIAL</div>
+  <a class="nav" href="wallet.html">◉ My Wallet</a>
+  <a class="nav" href="transactions.html">⇄ Transactions</a>
+  <a class="nav" href="invoices.html">▤ Invoices</a>
+  <div class="nav-label">ACCOUNT</div>
+  <a class="nav" href="settings.html">⚙ Settings</a>
+  <div class="sidebar-bottom">PEOPLE & WORKFORCE CENTER<br>FASTPRODUCTION V2</div>
+</aside>
+
+<main class="main">
+  <div class="topline">
+    <div>
+      <div class="eyebrow">PEOPLE & WORKFORCE CENTER</div>
+      <h1>Employee Directory<span style="color:var(--lime)">.</span></h1>
+      <div class="subtitle">One place for the people behind every production process.</div>
+    </div>
+    <button class="btn primary" onclick="openModal()">＋ Add Employee</button>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">TOTAL EMPLOYEES</div><div class="stat-value" id="total">0</div><div class="stat-note">REGISTERED PEOPLE</div></div>
+    <div class="stat"><div class="stat-label">ACTIVE</div><div class="stat-value" id="active">0</div><div class="stat-note">CURRENTLY WORKING</div></div>
+    <div class="stat"><div class="stat-label">ASSIGNED</div><div class="stat-value" id="assigned">0</div><div class="stat-note">MACHINE / WORK PLACEMENT</div></div>
+    <div class="stat"><div class="stat-label">AVAILABLE</div><div class="stat-value" id="available">0</div><div class="stat-note">NOT CURRENTLY ASSIGNED</div></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="search"><input id="search" placeholder="Search employee name, skill, machine..." oninput="render()"></div>
+    <div class="filters">
+      <button class="filter active" data-filter="All" onclick="setFilter('All',this)">All</button>
+      <button class="filter" data-filter="Active" onclick="setFilter('Active',this)">Active</button>
+      <button class="filter" data-filter="Inactive" onclick="setFilter('Inactive',this)">Inactive</button>
+      <button class="filter" data-filter="On Leave" onclick="setFilter('On Leave',this)">On Leave</button>
+    </div>
+  </div>
+
+  <div class="directory-head">
+    <h2>People Directory</h2>
+    <span id="resultCount">0 PEOPLE</span>
+  </div>
+  <section class="grid" id="employeeGrid"></section>
+
+  <div class="note">
+    <b>DATA SOURCES</b><br>
+    Manual registration: add existing workers directly to your directory.<br>
+    Your Loker: accepted applicants can later be converted into employee records.
+    Recruitment integration is not connected yet.
+  </div>
+</main>
+</div>
+
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Register Employee</h2>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+    <form id="employeeForm">
+      <div class="form-grid">
+        <div class="field full"><label>FULL NAME *</label><input name="name" required placeholder="Employee name"></div>
+        <div class="field"><label>PHONE / CONTACT</label><input name="phone" placeholder="Contact number"></div>
+        <div class="field"><label>POSITION / ROLE</label><input name="role" placeholder="e.g. Sewing Operator"></div>
+        <div class="field"><label>EXPERIENCE</label><input name="experience" placeholder="e.g. 2 years"></div>
+        <div class="field"><label>EMPLOYMENT STATUS</label>
+          <select name="status"><option>Active</option><option>Inactive</option><option>On Leave</option></select>
+        </div>
+        <div class="field full"><label>MACHINE COMPETENCIES</label>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="skills" value="Overlock">Overlock</label>
+            <label class="check"><input type="checkbox" name="skills" value="High Speed">High Speed</label>
+            <label class="check"><input type="checkbox" name="skills" value=" obras">Obras / Sewing</label>
+            <label class="check"><input type="checkbox" name="skills" value="Cutting">Cutting</label>
+            <label class="check"><input type="checkbox" name="skills" value="Finishing">Finishing</label>
+            <label class="check"><input type="checkbox" name="skills" value="Other">Other</label>
+          </div>
+        </div>
+        <div class="field"><label>ASSIGNMENT</label><input name="assignment" placeholder="e.g. M600 / Workshop A"></div>
+        <div class="field"><label>DATA SOURCE</label>
+          <select name="source"><option>Manual</option><option>Your Loker</option></select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn primary">Save Employee</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script src="../assets/js/transition.js"></script>
+<script src="../assets/js/prayer-guard.js"></script>
+<script src="../assets/js/music.js"></script>
+<script src="../assets/js/employees.js"></script>
+</body>
+</html>

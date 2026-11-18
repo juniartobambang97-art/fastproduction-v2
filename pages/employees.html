@@ -199,127 +199,14 @@ input:focus,select:focus{border-color:var(--lime)}
   </div>
 </div>
 
-<script>
-const STORAGE_KEY = "fp_v2_employees";
-let employees = [];
-let currentFilter = "All";
 
-try {
-  employees = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  if (!Array.isArray(employees)) employees = [];
-} catch(e) { employees = []; }
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
-}
-
-function initials(name) {
-  return name.trim().split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
-}
-
-function render() {
-  const query = document.getElementById("search").value.toLowerCase();
-  const filtered = employees.filter(e => {
-    const matchesStatus = currentFilter === "All" || e.status === currentFilter;
-    const content = [e.name,e.phone,e.role,e.experience,e.assignment,...e.skills].join(" ").toLowerCase();
-    return matchesStatus && content.includes(query);
-  });
-
-  document.getElementById("total").textContent = employees.length;
-  document.getElementById("active").textContent = employees.filter(e=>e.status==="Active").length;
-  document.getElementById("assigned").textContent = employees.filter(e=>e.assignment).length;
-  document.getElementById("available").textContent = employees.filter(e=>e.status==="Active"&&!e.assignment).length;
-  document.getElementById("resultCount").textContent = filtered.length + " PEOPLE";
-
-  const grid = document.getElementById("employeeGrid");
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty">
-      <strong>${employees.length ? "No matching /employees.html" : "Your workforce starts here."}</strong>
-      <p>${employees.length ? "Try another search or filter." : "Register your existing workers or add employees after recruitment."}</p>
-      ${employees.length ? "" : '<button class="btn primary" onclick="openModal()">＋ Register First Employee</button>'}
-    </div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(e => `
-    <article class="employee">
-      <div class="employee-top">
-        <div class="avatar">${escapeHTML(initials(e.name))}</div>
-        <div class="person"><strong>${escapeHTML(e.name)}</strong><small>${escapeHTML(e.role || "Employee")}</small></div>
-        <span class="status ${e.status==="Inactive"?"inactive":e.status==="On Leave"?"leave":""}">${escapeHTML(e.status)}</span>
-      </div>
-      <div class="employee-info">
-        <div><div class="info-label">CONTACT</div><div class="info-value">${escapeHTML(e.phone || "Not provided")}</div></div>
-        <div><div class="info-label">EXPERIENCE</div><div class="info-value">${escapeHTML(e.experience || "Not specified")}</div></div>
-        <div><div class="info-label">ASSIGNMENT</div><div class="info-value">${escapeHTML(e.assignment || "Available")}</div></div>
-        <div><div class="info-label">COMPETENCIES</div><div class="info-value">${e.skills.length} skills</div></div>
-      </div>
-      <div class="skills">${e.skills.length ? e.skills.map(s=>`<span class="skill">${escapeHTML(s)}</span>`).join("") : '<span class="source">No competencies registered</span>'}</div>
-      <div class="card-foot">
-        <span class="source">SOURCE: <b>${escapeHTML(e.source)}</b></span>
-        <button onclick="removeEmployee('${e.id}')">Remove ×</button>
-      </div>
-    </article>
-  `).join("");
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function setFilter(filter, button) {
-  currentFilter = filter;
-  document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
-  button.classList.add("active");
-  render();
-}
-
-function openModal() {
-  document.getElementById("modal").classList.add("open");
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("open");
-}
-
-document.getElementById("employeeForm").addEventListener("submit", function(event) {
-  event.preventDefault();
-  const form = new FormData(this);
-  const name = String(form.get("name") || "").trim();
-  if (!name) return;
-
-  employees.unshift({
-    id: Date.now().toString(),
-    name,
-    phone: String(form.get("phone") || "").trim(),
-    role: String(form.get("role") || "").trim(),
-    experience: String(form.get("experience") || "").trim(),
-    status: String(form.get("status") || "Active"),
-    skills: form.getAll("skills").filter(Boolean),
-    assignment: String(form.get("assignment") || "").trim(),
-    source: String(form.get("source") || "Manual")
-  });
-
-  save();
-  this.reset();
-  closeModal();
-  render();
-});
-
-function removeEmployee(id) {
-  if (!confirm("Remove this employee from the local directory?")) return;
-  employees = employees.filter(e=>e.id!==id);
-  save();
-  render();
-}
-
-render();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
 <script src="../assets/js/transition.js"></script>
 <script src="../assets/js/prayer-guard.js"></script>
 <script src="../assets/js/music.js"></script>
+<script src="../assets/js/employees.js"></script>
 </body>
 </html>

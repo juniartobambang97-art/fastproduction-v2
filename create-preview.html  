@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Preview — FastProduction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0d0c;
+  --panel: #121614;
+  --panel2: #191e1b;
+  --line: #29312c;
+  --text: #edf2ed;
+  --muted: #849087;
+  --lime: #c5f36b;
+  --red: #f28e7d;
+  --orange: #f1b96d;
+  --mono: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+}
+button, input, select, textarea { font: inherit; }
+.topbar {
+  height: 68px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+}
+.logo {
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo span { color: var(--lime); }
+.top-meta {
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 38px 24px 80px;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.eyebrow {
+  color: var(--lime);
+  font: 11px var(--mono);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(27px, 5vw, 42px);
+  letter-spacing: -2px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 9px;
+}
+.status-badge {
+  border: 1px solid var(--line);
+  padding: 9px 13px;
+  color: var(--muted);
+  font: 11px var(--mono);
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.status-badge.live { color: var(--lime); border-color: #52613d; }
+.status-badge.draft { color: var(--orange); border-color: #6b5a2e; }
+.steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+.step {
+  padding: 16px 12px;
+  background: var(--panel);
+  border-right: 1px solid var(--line);
+}
+.step:last-child { border: 0; }
+.step.done { background: #151b16; }
+.step.active { background: #1c261d; }
+.step-number {
+  color: var(--lime);
+  font: 11px var(--mono);
+  margin-bottom: 7px;
+}
+.step-name { font-size: 12px; font-weight: 700; }
+.step-desc { color: var(--muted); font-size: 10px; margin-top: 4px; }
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+.sidebar {
+  background: #101411;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 10px;
+  position: sticky;
+  top: 15px;
+  display: flex;
+  flex-direction: column;
+  min-height: 650px;
+}
+.nav-label {
+  font: 10px var(--mono);
+  letter-spacing: 1.5px;
+  color: #667168;
+  padding: 16px 10px 9px;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 11px;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 2px 0;
+  text-decoration: none;
+  transition: .2s;
+}
+.nav:hover, .nav.active { background: #202a22; color: var(--lime); }
+.nav-icon { width: 18px; flex-shrink: 0; text-align: center; font-size: 15px; }
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+}
+.user-mini { display: flex; align-items: center; gap: 10px; padding: 10px; }
+.avatar {
+  width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px;
+  background: #29372c; display: grid; place-items: center;
+  color: var(--lime); font-weight: 800;
+}
+.user-mini strong { font-size: 11px; display: block; }
+.user-mini small { font-size: 9px; color: var(--muted); }
+.content { min-width: 0; }
+.section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 23px;
+  margin-bottom: 17px;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.section h2 { font-size: 17px; margin: 0; letter-spacing: -.5px; }
+.section-desc { color: var(--muted); font-size: 11px; margin-top: 6px; }
+.tag {
+  color: var(--lime);
+  border: 1px solid #52613d;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font: 9px var(--mono);
+  white-space: nowrap;
+}
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.field { min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field-label {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+}
+.field-value {
+  font-size: 14px;
+  color: var(--text);
+  padding: 10px 12px;
+  background: #0c100e;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  min-height: 40px;
+  word-break: break-word;
+}
+.field-value.empty { color: #58625b; font-style: italic; font-size: 12px; }
+.field-value.mono { font-family: var(--mono); font-size: 12px; }
+.field-value.large { font-size: 18px; font-weight: 700; color: var(--lime); }
+.visual-placeholder {
+  min-height: 260px;
+  background: #0c100e;
+  border: 1px dashed #465248;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+  padding: 24px;
+}
+.visual-placeholder strong { color: var(--lime); font-size: 28px; font-weight: 400; }
+.preview-card {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 380px;
+}
+.preview-card .visual {
+  height: 200px;
+  background: #0c100e;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.preview-card .body { padding: 17px; }
+.preview-card h3 { font-size: 15px; margin: 0 0 7px; }
+.preview-card .desc { font-size: 11px; color: var(--muted); line-height: 1.8; min-height: 39px; }
+.preview-card .brand { font-size: 10px; color: var(--muted); margin: 12px 0; }
+.preview-card .brand strong { color: var(--text); }
+.preview-card .progress-info {
+  display: flex; justify-content: space-between; gap: 10px;
+  font: 10px var(--mono); margin: 14px 0 8px;
+}
+.preview-card .progress-info span:last-child { color: var(--lime); }
+.preview-card .track { height: 5px; background: #303a31; border-radius: 8px; overflow: hidden; }
+.preview-card .fill { height: 100%; background: var(--lime); border-radius: 8px; }
+.preview-card .foot {
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--line); padding-top: 13px; margin-top: 15px;
+}
+.preview-card .foot small { color: var(--muted); font-size: 9px; }
+.preview-card .foot a { color: var(--lime); font-size: 10px; font-weight: 800; }
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.btn {
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn.primary { background: var(--lime); color: #11170d; border-color: var(--lime); }
+.btn:hover:not(:disabled) { opacity: .85; }
+.footer {
+  text-align: center;
+  color: #657067;
+  font: 10px var(--mono);
+  margin-top: 35px;
+}
+.loading-state, .error-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  font: 12px var(--mono);
+}
+.error-state { color: var(--red); border-color: #6b3232; background: #1a1010; }
+.error-state strong { display: block; color: var(--text); font-size: 14px; margin-bottom: 10px; }
+.error-state .actions { justify-content: center; margin-top: 20px; }
+.info-note {
+  background: #192219;
+  border: 1px solid #394b31;
+  padding: 14px;
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+  margin-bottom: 17px;
+}
+.info-note strong { color: var(--lime); font-family: var(--mono); font-size: 10px; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+@media(max-width: 760px) {
+  .container { padding: 27px 15px 55px; }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    gap: 4px;
+    min-height: auto;
+  }
+  .nav-label { display: none; }
+  .sidebar-bottom { display: none; }
+  .nav { white-space: nowrap; }
+  .steps { grid-template-columns: repeat(5, 130px); overflow-x: auto; }
+  .heading { align-items: flex-start; flex-direction: column; }
+}
+@media(max-width: 480px) {
+  .section { padding: 17px; }
+  .field-grid { grid-template-columns: 1fr; }
+  .field.full { grid-column: auto; }
+  .preview-card { max-width: 100%; }
+  .actions { flex-direction: column; }
+  .actions .btn { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="logo" href="../index.html">FAST<span>PRODUCTION</span></a>
+  <div class="top-meta">CREATOR WORKSPACE / PREVIEW</div>
+</header>
+<main class="container">
+  <div class="heading">
+    <div>
+      <div class="eyebrow">DESIGN PREVIEW</div>
+      <h1>Review Your Design</h1>
+      <div class="subtitle" id="page-subtitle">Verifikasi informasi desain sebelum melanjutkan ke tahap berikutnya.</div>
+    </div>
+    <div class="status-badge" id="status-badge">● LOADING…</div>
+  </div>
+
+  <div class="steps">
+    <div class="step done">
+      <div class="step-number">01</div>
+      <div class="step-name">Design</div>
+      <div class="step-desc">Visual concept</div>
+    </div>
+    <div class="step done">
+      <div class="step-number">02</div>
+      <div class="step-name">Product</div>
+      <div class="step-desc">Specifications</div>
+    </div>
+    <div class="step done">
+      <div class="step-number">03</div>
+      <div class="step-name">Cost</div>
+      <div class="step-desc">Production plan</div>
+    </div>
+    <div class="step done">
+      <div class="step-number">04</div>
+      <div class="step-name">Campaign</div>
+      <div class="step-desc">Market launch</div>
+    </div>
+    <div class="step active">
+      <div class="step-number">05</div>
+      <div class="step-name">Preview</div>
+      <div class="step-desc">Final review</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-label">WORKSPACE</div>
+      <a class="nav" href="dashboard.html"><span class="nav-icon">▦</span><span>Command Center</span></a>
+      <a class="nav" href="marketplace.html"><span class="nav-icon">⌕</span><span>Marketplace</span></a>
+      <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span>Scope</span></a>
+      <a class="nav active" href="create-design.html"><span class="nav-icon">✳</span><span>Design Studio</span></a>
+      <a class="nav" href="lab-konveksibos.html"><span class="nav-icon">▥</span><span>Lab Konveksibos</span></a>
+      <a class="nav" href="your-loker.html"><span class="nav-icon">▤</span><span>Your Loker</span></a>
+      <div class="nav-label">MANAGEMENT</div>
+      <a class="nav" href="equipment.html"><span class="nav-icon">▣</span><span>Equipment</span></a>
+      <a class="nav" href="employees.html"><span class="nav-icon">♙</span><span>Employees</span></a>
+      <a class="nav" href="profile.html"><span class="nav-icon">◎</span><span>My Profile</span></a>
+      <div class="nav-label">FINANCIAL</div>
+      <a class="nav" href="wallet.html"><span class="nav-icon">◈</span><span>My Wallet</span></a>
+      <a class="nav" href="transactions.html"><span class="nav-icon">↔</span><span>Transactions</span></a>
+      <a class="nav" href="invoices.html"><span class="nav-icon">▧</span><span>Invoices</span></a>
+      <div class="nav-label">ACCOUNT</div>
+      <a class="nav" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
+      <div class="sidebar-bottom">
+        <div class="user-mini">
+          <div class="avatar">U</div>
+          <div>
+            <strong>Your Account</strong>
+            <small>Personal workspace</small>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="content" id="content">
+      <div class="loading-state" id="loading-state">LOADING DESIGN DATA…</div>
+    </div>
+  </div>
+
+  <div class="footer">FASTPRODUCTION — FROM DESIGN TO PRODUCTION.</div>
+</main>
+
+<!-- Script imports: same order as other pages -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/create-preview.js"></script>
+<script src="../assets/js/transition.js"></script>
+</body>
+</html>
