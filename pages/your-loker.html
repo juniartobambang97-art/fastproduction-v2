@@ -94,5 +94,6 @@ function closeModal(){document.getElementById('modal').classList.remove('show')}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
 function switchTab(btn,type){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');const jobs=document.getElementById('jobs');if(type==='all'||type==='draft'){jobs.style.display='grid'}else{jobs.style.display='none';jobs.insertAdjacentHTML('afterend','<div class="empty" id="filterEmpty"><strong>No '+type+' vacancies</strong>There are no records in this prototype.</div>');}document.getElementById('filterEmpty')?.remove();if(type!=='all'&&type!=='draft')jobs.insertAdjacentHTML('afterend','<div class="empty" id="filterEmpty"><strong>No '+type+' vacancies</strong>There are no records in this prototype.</div>')}
 </script>
+<script src="../assets/js/transition.js"></script>
 </body>
 </html>

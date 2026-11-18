@@ -25,4 +25,5 @@
 </main></div>
 <script>
 function switchTab(btn,type){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('invoiceList').innerHTML='<div class="card empty"><div style="font-size:24px">▤</div><strong>No '+(type==='all'?'':type+' ')+'invoices yet</strong>Invoice records will appear here when billing is connected.</div>'}
-</script></body></html>
+</script><script src="../assets/js/transition.js"></script>
+</body></html>

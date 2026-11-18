@@ -721,6 +721,9 @@
         'Fashion Architect';
 
       charName.textContent = name;
+      try {
+        sessionStorage.setItem('fp_character_name', name);
+      } catch (_) {}
 
       loginPanel.classList.remove('show');
 

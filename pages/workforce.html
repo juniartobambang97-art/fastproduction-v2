@@ -58,4 +58,5 @@ $('#fSubmit').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormD
 $('#fPending').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),s=S().find(x=>x.id===d.stockId),a=P();a.unshift({id:id(),stockId:d.stockId,product:s?.name||'Order',type:d.type,material:d.material,required:+d.required||0,available:+d.available||0,note:d.note,status:'open'});write(K.pending,a);log('Kendala dicatat','-',s?.name||'Order',Math.max(0,(+d.required||0)-(+d.available||0)),d.type);closeM('mPending');render();say('Kendala dicatat')};
 function resolvePending(pid){let a=P(),p=a.find(x=>x.id===pid);if(p){p.status='resolved';write(K.pending,a);log('Pending diselesaikan','-',p.product,0,p.material);render();say('Status diperbarui')}}
 document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));render();
-</script></body></html>
+</script><script src="../assets/js/transition.js"></script>
+</body></html>
