@@ -1215,5 +1215,273 @@ navLinks.querySelectorAll("a").forEach(link => {
 });
 </script>
 
+
+<!-- FASTPRODUCTION SURVIVAL DRAMA -->
+<style>
+#fp-survival-hud {
+  position: fixed;
+  z-index: 99990;
+  top: 14px;
+  left: 14px;
+  width: min(280px, calc(100vw - 28px));
+  padding: 14px;
+  background: rgba(10,10,15,.94);
+  color: white;
+  border: 1px solid #555;
+  border-radius: 12px;
+  font-family: Arial, sans-serif;
+  display: none;
+  box-shadow: 0 5px 25px #0008;
+}
+.fp-stat {
+  display: flex;
+  justify-content: space-between;
+  margin: 7px 0;
+  font-size: 12px;
+  font-weight: bold;
+}
+.fp-bar {
+  height: 10px;
+  background: #333;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.fp-fill {
+  height: 100%;
+  width: 100%;
+  transition: width .35s;
+}
+#fp-hp-fill { background: #ef3333; }
+#fp-exp-fill { background: #eab308; }
+
+#fp-monster-alert {
+  position: fixed;
+  z-index: 99991;
+  top: 38%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #ff2525;
+  font: 900 clamp(22px, 6vw, 42px) Arial;
+  text-shadow: 0 0 18px red, 2px 2px black;
+  display: none;
+  pointer-events: none;
+  animation: fp-shake .2s infinite;
+}
+#fp-red-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 99989;
+  background: rgba(255,0,0,.42);
+  opacity: 0;
+  pointer-events: none;
+}
+#fp-red-flash.hit {
+  animation: fp-flash .55s ease-out;
+}
+#fp-gameover {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  background:
+    radial-gradient(circle, #650000 0%, #170000 48%, #050505 100%);
+  font-family: Impact, Arial Black, sans-serif;
+}
+#fp-gameover .fp-fatality {
+  color: #ff1717;
+  font-size: clamp(42px, 12vw, 85px);
+  font-weight: 1000;
+  letter-spacing: 5px;
+  text-shadow: 0 0 12px red, 0 0 35px #f00;
+  animation: fp-shake .15s infinite;
+}
+#fp-gameover .fp-over {
+  font-size: clamp(28px, 8vw, 55px);
+  letter-spacing: 5px;
+  margin: 12px;
+}
+#fp-gameover p {
+  font: bold 13px Arial;
+  color: #aaa;
+}
+#fp-respawn {
+  margin-top: 24px;
+  padding: 13px 35px;
+  color: white;
+  background: #b00000;
+  border: 1px solid #ff5555;
+  border-radius: 6px;
+  font-weight: 900;
+  cursor: pointer;
+}
+@keyframes fp-flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes fp-shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+</style>
+
+<div id="fp-red-flash"></div>
+
+<div id="fp-survival-hud">
+  <div style="font-weight:900;letter-spacing:2px;margin-bottom:12px">
+    ⚔️ HERO SURVIVAL
+  </div>
+  <div class="fp-stat">
+    <span>❤️ HP</span><span id="fp-hp-text">100 / 100</span>
+  </div>
+  <div class="fp-bar"><div class="fp-fill" id="fp-hp-fill"></div></div>
+  <div class="fp-stat" style="margin-top:13px">
+    <span>⭐ EXP</span><span id="fp-exp-text">0 / 100</span>
+  </div>
+  <div class="fp-bar"><div class="fp-fill" id="fp-exp-fill"></div></div>
+  <div id="fp-battle-status" style="color:#ff4545;font-size:11px;margin-top:12px">
+    ⚠️ MONSTER DETECTED
+  </div>
+</div>
+
+<div id="fp-monster-alert">⚠ MONSTER ATTACK! ⚠</div>
+
+<div id="fp-gameover">
+  <div style="font-size:13px;letter-spacing:5px;color:#aaa">
+    FASTPRODUCTION SURVIVAL
+  </div>
+  <div class="fp-fatality">FATALITY!</div>
+  <div class="fp-over">GAME OVER</div>
+  <p>HERO HAS BEEN DEFEATED</p>
+  <p id="fp-final-exp">FINAL EXP: 0</p>
+  <button id="fp-respawn">⟳ RESPAWN</button>
+</div>
+
+<script>
+(() => {
+  const IDLE_TIME = 10000;
+  const ATTACK_TIME = 5000;
+  const DAMAGE = 20;
+
+  const hud = document.getElementById("fp-survival-hud");
+  const alertBox = document.getElementById("fp-monster-alert");
+  const flash = document.getElementById("fp-red-flash");
+  const gameover = document.getElementById("fp-gameover");
+
+  let hp = 100;
+  let exp = 0;
+  let idleTimer;
+  let attackTimer;
+  let gameStarted = false;
+  let dead = false;
+
+  function updateHUD() {
+    document.getElementById("fp-hp-text").textContent =
+      hp + " / 100";
+    document.getElementById("fp-exp-text").textContent =
+      exp + " / 100";
+
+    document.getElementById("fp-hp-fill").style.width =
+      hp + "%";
+    document.getElementById("fp-exp-fill").style.width =
+      Math.min(exp, 100) + "%";
+  }
+
+  function hit() {
+    if (dead) return;
+
+    hp = Math.max(0, hp - DAMAGE);
+    exp = Math.min(100, exp + 20);
+
+    updateHUD();
+
+    flash.classList.remove("hit");
+    void flash.offsetWidth;
+    flash.classList.add("hit");
+
+    alertBox.style.display = "block";
+    document.getElementById("fp-battle-status").textContent =
+      "💀 HERO IS UNDER ATTACK!";
+
+    setTimeout(() => {
+      if (!dead) alertBox.style.display = "none";
+    }, 1200);
+
+    if (hp <= 0) {
+      dead = true;
+      clearInterval(attackTimer);
+      alertBox.style.display = "none";
+
+      document.getElementById("fp-final-exp").textContent =
+        "FINAL EXP: " + exp;
+
+      gameover.style.display = "flex";
+    }
+  }
+
+  function startBattle() {
+    if (gameStarted || dead) return;
+
+    gameStarted = true;
+    hud.style.display = "block";
+    alertBox.style.display = "block";
+
+    document.getElementById("fp-battle-status").textContent =
+      "⚠️ MONSTER IS ATTACKING!";
+
+    attackTimer = setInterval(hit, ATTACK_TIME);
+  }
+
+  function resetSurvival() {
+    if (dead) return;
+
+    clearTimeout(idleTimer);
+    clearInterval(attackTimer);
+
+    hp = 100;
+    exp = 0;
+    gameStarted = false;
+
+    hud.style.display = "none";
+    alertBox.style.display = "none";
+    updateHUD();
+
+    idleTimer = setTimeout(startBattle, IDLE_TIME);
+  }
+
+  function respawn() {
+    dead = false;
+    gameover.style.display = "none";
+    resetSurvival();
+  }
+
+  document.getElementById("fp-respawn")
+    .addEventListener("click", respawn);
+
+  [
+    "pointerdown",
+    "keydown",
+    "touchstart",
+    "wheel",
+    "scroll",
+    "click"
+  ].forEach(event => {
+    window.addEventListener(event, resetSurvival, {
+      passive: true
+    });
+  });
+
+  updateHUD();
+  resetSurvival();
+})();
+</script>
+<!-- END FASTPRODUCTION SURVIVAL DRAMA -->
+
 </body>
 </html>
