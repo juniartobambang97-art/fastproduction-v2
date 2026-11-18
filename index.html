@@ -1277,7 +1277,29 @@ navLinks.querySelectorAll("a").forEach(link => {
   pointer-events: none;
 }
 #fp-red-flash.hit {
-  animation: fp-flash .55s ease-out;
+  animation: fp-flash .22s ease-out 3;
+}
+#fp-survival-hud .fp-bar { height: 18px; }
+#fp-damage-number {
+  position:fixed;z-index:99999;top:43%;left:50%;
+  transform:translate(-50%,-50%);
+  color:#ff1717;font:bold clamp(42px,12vw,85px) Impact,Arial;
+  text-shadow:0 0 15px red,3px 3px black;
+  pointer-events:none;animation:fp-damage-fly .9s ease-out forwards;
+}
+.fp-debuff-icon {
+  display:inline-block;
+  animation:fp-debuff-pop .35s ease-out;
+}
+@keyframes fp-damage-fly {
+  0% {opacity:0;transform:translate(-50%,30px) scale(1.5)}
+  20% {opacity:1}
+  100% {opacity:0;transform:translate(-50%,-100px) scale(.7)}
+}
+@keyframes fp-debuff-pop {
+  0% {transform:scale(2) rotate(-30deg);opacity:0}
+  50% {transform:scale(1.3);opacity:1}
+  100% {transform:scale(1);opacity:.8}
 }
 #fp-gameover {
   position: fixed;
@@ -1345,6 +1367,7 @@ navLinks.querySelectorAll("a").forEach(link => {
     <span>⭐ EXP</span><span id="fp-exp-text">0 / 100</span>
   </div>
   <div class="fp-bar"><div class="fp-fill" id="fp-exp-fill"></div></div>
+  <div id="fp-debuffs" style="display:flex;flex-wrap:wrap;gap:5px;min-height:28px;margin-top:9px;font-size:19px"></div>
   <div id="fp-battle-status" style="color:#ff4545;font-size:11px;margin-top:12px">
     ⚠️ MONSTER DETECTED
   </div>
@@ -1367,14 +1390,15 @@ navLinks.querySelectorAll("a").forEach(link => {
 (() => {
   const IDLE_TIME = 10000;
   const ATTACK_TIME = 5000;
-  const DAMAGE = 20;
+  const HP_MAX = 100000;
+  const DAMAGE = [10000, 20000, 30000, 50000];
 
   const hud = document.getElementById("fp-survival-hud");
   const alertBox = document.getElementById("fp-monster-alert");
   const flash = document.getElementById("fp-red-flash");
   const gameover = document.getElementById("fp-gameover");
 
-  let hp = 100;
+  let hp = HP_MAX;
   let exp = 0;
   let idleTimer;
   let attackTimer;
@@ -1383,12 +1407,12 @@ navLinks.querySelectorAll("a").forEach(link => {
 
   function updateHUD() {
     document.getElementById("fp-hp-text").textContent =
-      hp + " / 100";
+      hp.toLocaleString() + " / " + HP_MAX.toLocaleString();
     document.getElementById("fp-exp-text").textContent =
       exp + " / 100";
 
     document.getElementById("fp-hp-fill").style.width =
-      hp + "%";
+      (hp / HP_MAX * 100) + "%";
     document.getElementById("fp-exp-fill").style.width =
       Math.min(exp, 100) + "%";
   }
@@ -1396,8 +1420,28 @@ navLinks.querySelectorAll("a").forEach(link => {
   function hit() {
     if (dead) return;
 
-    hp = Math.max(0, hp - DAMAGE);
+    const damage = DAMAGE[Math.floor(Math.random() * DAMAGE.length)];
+    hp = Math.max(0, hp - damage);
     exp = Math.min(100, exp + 20);
+
+    const damageNode = document.createElement("div");
+    damageNode.id = "fp-damage-number";
+    damageNode.textContent = "-" + damage.toLocaleString();
+    document.body.appendChild(damageNode);
+    setTimeout(() => damageNode.remove(), 1000);
+
+    const debuffTray = document.getElementById("fp-debuffs");
+    debuffTray.innerHTML = "";
+    const icons = ["🥴","💀","🕸️","🔥","⚡","☠️","🤢","🩸","😵","🧟"];
+    let count = 0;
+    const debuffBurst = setInterval(() => {
+      const icon = document.createElement("span");
+      icon.className = "fp-debuff-icon";
+      icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+      debuffTray.appendChild(icon);
+      count++;
+      if (count >= 18) clearInterval(debuffBurst);
+    }, 100);
 
     updateHUD();
 
@@ -1444,7 +1488,7 @@ navLinks.querySelectorAll("a").forEach(link => {
     clearTimeout(idleTimer);
     clearInterval(attackTimer);
 
-    hp = 100;
+    hp = HP_MAX;
     exp = 0;
     gameStarted = false;
 
