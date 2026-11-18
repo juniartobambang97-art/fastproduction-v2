@@ -235,7 +235,7 @@ function render() {
 
   if (!filtered.length) {
     grid.innerHTML = `<div class="empty">
-      <strong>${employees.length ? "No matching employees" : "Your workforce starts here."}</strong>
+      <strong>${employees.length ? "No matching /employees.html" : "Your workforce starts here."}</strong>
       <p>${employees.length ? "Try another search or filter." : "Register your existing workers or add employees after recruitment."}</p>
       ${employees.length ? "" : '<button class="btn primary" onclick="openModal()">＋ Register First Employee</button>'}
     </div>`;

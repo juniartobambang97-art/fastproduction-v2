@@ -804,7 +804,7 @@
 
       try {
         const { error } = await window.fpSupabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + '/login'
+          redirectTo: window.location.origin + '/login.html'
         });
 
         if (error) throw error;
@@ -828,7 +828,7 @@
 
       // Redirect diperbaiki ke /dashboard
       setTimeout(() => {
-        window.location.href = '/dashboard'; 
+        window.location.href = '/dashboard.html'; 
       }, 1000);
     });
 
