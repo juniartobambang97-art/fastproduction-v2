@@ -43,7 +43,7 @@
       '>': '&gt;',
       '"': '&quot;',
       "'": '&#39;'
-    }[c]);
+    }[c]));
   }
 
   function notify(message, isError = false) {
