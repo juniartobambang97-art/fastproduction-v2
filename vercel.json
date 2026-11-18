@@ -1,8 +1,20 @@
 {
   "rewrites": [
-    {
-      "source": "/login.html",
-      "destination": "/pages/login.html"
-    }
+    { "source": "/login", "destination": "/pages/login.html" },
+    { "source": "/login.html", "destination": "/pages/login.html" },
+    { "source": "/dashboard", "destination": "/pages/dashboard.html" },
+    { "source": "/marketplace", "destination": "/pages/marketplace.html" },
+    { "source": "/profile", "destination": "/pages/profile.html" },
+    { "source": "/scope", "destination": "/pages/scope.html" },
+    { "source": "/wallet", "destination": "/pages/wallet.html" },
+    { "source": "/transactions", "destination": "/pages/transactions.html" },
+    { "source": "/invoices", "destination": "/pages/invoices.html" },
+    { "source": "/settings", "destination": "/pages/settings.html" },
+    { "source": "/equipment", "destination": "/pages/equipment.html" },
+    { "source": "/your-loker", "destination": "/pages/your-loker.html" },
+    { "source": "/employees", "destination": "/pages/employees.html" },
+    { "source": "/lab-konveksibos", "destination": "/pages/lab-konveksibos.html" },
+    { "source": "/workforce", "destination": "/pages/workforce.html" },
+    { "source": "/create-design", "destination": "/pages/create-design.html" }
   ]
 }
