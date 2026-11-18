@@ -177,6 +177,10 @@ h1{font-size:31px;letter-spacing:-1.5px;margin:8px 0 5px}
       <div class="avatar">U</div>
       <div><strong>Your Account</strong><small>Personal workspace</small></div>
     </div>
+    <button id="fp-logout" type="button"
+      style="width:100%;margin-top:12px;padding:11px;background:#202a22;color:#f2a19b;border:1px solid #49302e;border-radius:6px;text-align:left;font:inherit;font-size:12px;cursor:pointer">
+      ↪ Logout
+    </button>
   </div>
 </aside>
 
@@ -338,6 +342,33 @@ function walletAction(action){
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/auth.js"></script>
 <script src="../assets/js/dashboard.js"></script>
-<script src="../assets/js/transition.js"></script>
+
+<script>
+(() => {
+  const button = document.getElementById("fp-logout");
+  if (!button) return;
+
+  button.addEventListener("click", async () => {
+    if (!window.FPAuth) {
+      alert("Auth belum siap. Coba lagi.");
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Logging out...";
+
+    try {
+      await window.FPAuth.logout();
+      window.location.replace("login.html");
+    } catch (error) {
+      console.error("Logout gagal:", error);
+      alert("Logout gagal: " + error.message);
+      button.disabled = false;
+      button.textContent = "↪ Logout";
+    }
+  });
+})();
+</script>
+\n<script src="../assets/js/transition.js"></script>
 </body>
 </html>
