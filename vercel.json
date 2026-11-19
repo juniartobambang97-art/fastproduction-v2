@@ -71,6 +71,10 @@
     {
       "source": "/campaigns.html",
       "destination": "/pages/campaigns.html"
+    },
+    {
+      "source": "/manage-company.html",
+      "destination": "/pages/manage-company.html"
     }
   ]
 }
