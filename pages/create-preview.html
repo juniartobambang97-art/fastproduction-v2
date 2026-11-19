@@ -27,26 +27,6 @@ body {
   font-family: 'Manrope', sans-serif;
 }
 button, input, select, textarea { font: inherit; }
-.topbar {
-  height: 68px;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5%;
-}
-.logo {
-  font-weight: 800;
-  letter-spacing: -1px;
-  font-size: 18px;
-  color: var(--text);
-  text-decoration: none;
-}
-.logo span { color: var(--lime); }
-.top-meta {
-  color: var(--muted);
-  font: 11px var(--mono);
-}
 .container {
   max-width: 1200px;
   margin: auto;
@@ -110,54 +90,10 @@ h1 {
 .step-desc { color: var(--muted); font-size: 10px; margin-top: 4px; }
 .layout {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
   align-items: start;
 }
-.sidebar {
-  background: #101411;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 18px 10px;
-  position: sticky;
-  top: 15px;
-  display: flex;
-  flex-direction: column;
-  min-height: 650px;
-}
-.nav-label {
-  font: 10px var(--mono);
-  letter-spacing: 1.5px;
-  color: #667168;
-  padding: 16px 10px 9px;
-}
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 11px;
-  border-radius: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  margin: 2px 0;
-  text-decoration: none;
-  transition: .2s;
-}
-.nav:hover, .nav.active { background: #202a22; color: var(--lime); }
-.nav-icon { width: 18px; flex-shrink: 0; text-align: center; font-size: 15px; }
-.sidebar-bottom {
-  margin-top: auto;
-  border-top: 1px solid var(--line);
-  padding-top: 15px;
-}
-.user-mini { display: flex; align-items: center; gap: 10px; padding: 10px; }
-.avatar {
-  width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px;
-  background: #29372c; display: grid; place-items: center;
-  color: var(--lime); font-weight: 800;
-}
-.user-mini strong { font-size: 11px; display: block; }
-.user-mini small { font-size: 9px; color: var(--muted); }
 .content { min-width: 0; }
 .section {
   background: var(--panel);
@@ -315,16 +251,6 @@ h1 {
 @media(max-width: 760px) {
   .container { padding: 27px 15px 55px; }
   .layout { grid-template-columns: 1fr; }
-  .sidebar {
-    position: static;
-    display: flex;
-    overflow-x: auto;
-    gap: 4px;
-    min-height: auto;
-  }
-  .nav-label { display: none; }
-  .sidebar-bottom { display: none; }
-  .nav { white-space: nowrap; }
   .steps { grid-template-columns: repeat(5, 130px); overflow-x: auto; }
   .heading { align-items: flex-start; flex-direction: column; }
 }
@@ -339,10 +265,6 @@ h1 {
 </style>
 </head>
 <body>
-<header class="topbar">
-  <a class="logo" href="../index.html">FAST<span>PRODUCTION</span></a>
-  <div class="top-meta">CREATOR WORKSPACE / PREVIEW</div>
-</header>
 <main class="container">
   <div class="heading">
     <div>
@@ -382,35 +304,6 @@ h1 {
   </div>
 
   <div class="layout">
-    <aside class="sidebar">
-      <div class="nav-label">WORKSPACE</div>
-      <a class="nav" href="dashboard.html"><span class="nav-icon">▦</span><span>Command Center</span></a>
-      <a class="nav" href="marketplace.html"><span class="nav-icon">⌕</span><span>Marketplace</span></a>
-      <a class="nav" href="scope.html"><span class="nav-icon">⌖</span><span>Scope</span></a>
-      <a class="nav active" href="create-design.html"><span class="nav-icon">✳</span><span>Design Studio</span></a>
-      <a class="nav" href="lab-konveksibos.html"><span class="nav-icon">▥</span><span>Lab Konveksibos</span></a>
-      <a class="nav" href="your-loker.html"><span class="nav-icon">▤</span><span>Your Loker</span></a>
-      <div class="nav-label">MANAGEMENT</div>
-      <a class="nav" href="equipment.html"><span class="nav-icon">▣</span><span>Equipment</span></a>
-      <a class="nav" href="employees.html"><span class="nav-icon">♙</span><span>Employees</span></a>
-      <a class="nav" href="profile.html"><span class="nav-icon">◎</span><span>My Profile</span></a>
-      <div class="nav-label">FINANCIAL</div>
-      <a class="nav" href="wallet.html"><span class="nav-icon">◈</span><span>My Wallet</span></a>
-      <a class="nav" href="transactions.html"><span class="nav-icon">↔</span><span>Transactions</span></a>
-      <a class="nav" href="invoices.html"><span class="nav-icon">▧</span><span>Invoices</span></a>
-      <div class="nav-label">ACCOUNT</div>
-      <a class="nav" href="settings.html"><span class="nav-icon">⚙</span><span>Settings</span></a>
-      <div class="sidebar-bottom">
-        <div class="user-mini">
-          <div class="avatar">U</div>
-          <div>
-            <strong>Your Account</strong>
-            <small>Personal workspace</small>
-          </div>
-        </div>
-      </div>
-    </aside>
-
     <div class="content" id="content">
       <div class="loading-state" id="loading-state">LOADING DESIGN DATA…</div>
     </div>
@@ -426,5 +319,6 @@ h1 {
 <script src="../assets/js/auth.js"></script>
 <script src="../assets/js/create-preview.js"></script>
 <script src="../assets/js/transition.js"></script>
+<script src="../assets/js/navbar.js"></script>
 </body>
 </html>
