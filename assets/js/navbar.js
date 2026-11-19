@@ -25,6 +25,7 @@
       ["Invoices", "invoices.html"]
     ]},
     { section: "ACCOUNT", items: [
+      ["Create Company", "create-company.html"],
       ["Profile", "profile.html"],
       ["Settings", "settings.html"]
     ]}
