@@ -951,10 +951,21 @@
     if (el.btnContinue) {
       el.btnContinue.addEventListener('click', async (e) => {
         e.preventDefault();
-        // create-preview.html does not exist yet (verified in diagnostic).
-        // Safe fallback: save → scroll to preview section → informative toast.
-        const ok = await saveDesign({ status: 'draft', scrollAfter: true });
+
+        const ok = await saveDesign({
+          status: 'draft',
+          scrollAfter: false
+        });
+
         if (!ok) return;
+
+        if (!state.designId) {
+          toast('ID desain tidak ditemukan.', 'error');
+          return;
+        }
+
+        window.location.href =
+          `/create-preview.html?id=${encodeURIComponent(state.designId)}`;
       });
     }
 
