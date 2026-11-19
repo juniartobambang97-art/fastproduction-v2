@@ -61,6 +61,9 @@
       costMaterial:      document.getElementById('cost-material'),
       costLabor:         document.getElementById('cost-labor'),
       costOther:         document.getElementById('cost-other'),
+      costAccessoriesList: document.getElementById('cost-accessories-list'),
+      costAccessoriesDisplay: document.getElementById('cost-accessories-display'),
+      btnAddAccessory: document.getElementById('btn-add-accessory'),
       costMargin:        document.getElementById('cost-margin'),
       costQuantity:      document.getElementById('cost-quantity'),
       costEstimate:      document.getElementById('cost-estimate'),
@@ -97,6 +100,124 @@
     return i;
   };
 
+
+  function addAccessoryRow(data = {}) {
+    const container = el.form.costAccessoriesList;
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.setAttribute('data-accessory-row', '');
+    row.style.cssText =
+      'padding:12px;border:1px solid #394b31;border-radius:7px;' +
+      'display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;';
+
+    const makeField = (label, key, type, placeholder, value) => {
+      const wrap = document.createElement('label');
+      wrap.style.cssText = 'display:grid;gap:5px;font-size:11px;color:var(--muted);';
+      wrap.textContent = label;
+
+      const input = document.createElement('input');
+      input.type = type;
+      input.dataset.accessoryField = key;
+      input.placeholder = placeholder;
+      input.value = value ?? '';
+      if (type === 'number') {
+        input.min = '0';
+        input.step = 'any';
+        input.inputMode = 'decimal';
+      }
+      input.style.width = '100%';
+      wrap.appendChild(input);
+      return wrap;
+    };
+
+    const name = makeField(
+      'Nama Bahan', 'name', 'text', 'Contoh: Label brand', data.name
+    );
+    const price = makeField(
+      'Harga Beli / Satuan (IDR)', 'price', 'number', 'Contoh: 1000', data.price
+    );
+    const unitWrap = document.createElement('label');
+    unitWrap.style.cssText = 'display:grid;gap:5px;font-size:11px;color:var(--muted);';
+    unitWrap.textContent = 'Satuan Pembelian';
+
+    const unit = document.createElement('select');
+    unit.dataset.accessoryField = 'unit';
+    unit.style.width = '100%';
+
+    [
+      ['pcs', 'Pcs'],
+      ['meter', 'Meter'],
+      ['kg', 'Kilogram'],
+      ['gram', 'Gram'],
+      ['cone', 'Cone'],
+      ['roll', 'Roll'],
+      ['lembar', 'Lembar'],
+      ['pack', 'Pack']
+    ].forEach(([value, label]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      unit.appendChild(option);
+    });
+    unit.value = data.unit || 'pcs';
+    unitWrap.appendChild(unit);
+
+    const consumption = makeField(
+      'Konsumsi / Produk', 'consumption', 'number', 'Contoh: 1', data.consumption
+    );
+
+    const footer = document.createElement('div');
+    footer.style.cssText =
+      'grid-column:1/-1;display:flex;justify-content:space-between;' +
+      'align-items:center;gap:10px;';
+
+    const result = document.createElement('small');
+    result.dataset.accessoryResult = '';
+    result.style.color = 'var(--lime)';
+    result.textContent = 'Rp 0 / pcs';
+
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.dataset.removeAccessory = '';
+    remove.className = 'btn';
+    remove.textContent = 'Hapus';
+
+    footer.append(result, remove);
+    row.append(name, price, unitWrap, consumption, footer);
+    container.appendChild(row);
+    calculateCost();
+  }
+
+  function readAccessories() {
+    const container = el.form.costAccessoriesList;
+    if (!container) return [];
+
+    return Array.from(container.querySelectorAll('[data-accessory-row]'))
+      .map((row) => {
+        const get = (key) =>
+          row.querySelector(`[data-accessory-field="${key}"]`)?.value || '';
+
+        return {
+          name: get('name').trim(),
+          price: get('price'),
+          unit: get('unit'),
+          consumption: get('consumption')
+        };
+      });
+  }
+
+  function restoreAccessories(items) {
+    const container = el.form.costAccessoriesList;
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (Array.isArray(items)) {
+      items.forEach((item) => addAccessoryRow(item));
+    }
+  }
+
   function calculateCost() {
     const read = (input) => {
       const value = Number(input?.value || 0);
@@ -106,13 +227,35 @@
     const material = read(el.form.costMaterial);
     const labor = read(el.form.costLabor);
     const other = read(el.form.costOther);
+
+    let accessories = 0;
+    const accessoryRows = el.form.costAccessoriesList
+      ? Array.from(el.form.costAccessoriesList.querySelectorAll('[data-accessory-row]'))
+      : [];
+
+    accessoryRows.forEach((row) => {
+      const get = (key) =>
+        row.querySelector(`[data-accessory-field="${key}"]`)?.value || '';
+
+      const price = Math.max(0, Number(get('price')) || 0);
+      const consumption = Math.max(0, Number(get('consumption')) || 0);
+      const amount = price * consumption;
+
+      accessories += amount;
+
+      const result = row.querySelector('[data-accessory-result]');
+      if (result) {
+        result.textContent = 'Rp ' + Math.round(amount).toLocaleString('id-ID') + ' / pcs';
+      }
+    });
+
     const margin = Math.min(99, Math.max(0, read(el.form.costMargin)));
 
     const quantityInput = read(el.form.costQuantity);
     const minQuantity = read(el.form.minQty);
     const quantity = Math.floor(quantityInput || minQuantity);
 
-    const unitCost = Math.round(material + labor + other);
+    const unitCost = Math.round(material + accessories + labor + other);
     const sellingPrice = margin >= 100
       ? unitCost
       : Math.ceil(unitCost / (1 - margin / 100));
@@ -125,6 +268,9 @@
 
     if (el.form.costEstimate) {
       el.form.costEstimate.value = String(unitCost);
+    }
+    if (el.form.costAccessoriesDisplay) {
+      el.form.costAccessoriesDisplay.textContent = money(accessories);
     }
     if (el.form.costTotalDisplay) {
       el.form.costTotalDisplay.textContent = money(unitCost);
@@ -329,6 +475,7 @@
       costMaterial:      el.form.costMaterial?.value || '',
       costLabor:         el.form.costLabor?.value || '',
       costOther:         el.form.costOther?.value || '',
+      accessories:        readAccessories(),
       costMargin:        el.form.costMargin?.value || '30',
       costQuantity:      el.form.costQuantity?.value || '',
       savedAt:           Date.now()
@@ -378,6 +525,7 @@
       if (el.form.costMaterial && data.costMaterial !== undefined) el.form.costMaterial.value = data.costMaterial;
       if (el.form.costLabor && data.costLabor !== undefined) el.form.costLabor.value = data.costLabor;
       if (el.form.costOther && data.costOther !== undefined) el.form.costOther.value = data.costOther;
+      restoreAccessories(data.accessories);
       if (el.form.costMargin && data.costMargin !== undefined) el.form.costMargin.value = data.costMargin;
       if (el.form.costQuantity && data.costQuantity !== undefined) el.form.costQuantity.value = data.costQuantity;
 
@@ -810,6 +958,35 @@
       });
     }
 
+
+    // Dynamic accessories: add, remove, calculate, and autosave.
+    if (el.form.btnAddAccessory && el.form.costAccessoriesList) {
+      el.form.btnAddAccessory.addEventListener('click', () => {
+        addAccessoryRow();
+        state.isDirty = true;
+        saveLocalDraft();
+      });
+
+      el.form.costAccessoriesList.addEventListener('click', (event) => {
+        const removeButton = event.target.closest('[data-remove-accessory]');
+        if (!removeButton) return;
+
+        removeButton.closest('[data-accessory-row]')?.remove();
+        calculateCost();
+        state.isDirty = true;
+        saveLocalDraft();
+      });
+
+      const updateAccessories = () => {
+        calculateCost();
+        state.isDirty = true;
+        saveLocalDraft();
+      };
+
+      el.form.costAccessoriesList.addEventListener('input', updateAccessories);
+      el.form.costAccessoriesList.addEventListener('change', updateAccessories);
+    }
+
     // Cost Engine live calculation.
     [
       el.form.costMaterial,
@@ -886,6 +1063,10 @@
     } else {
       // Create mode — restore local draft
       restoreLocalDraft();
+    }
+
+    if (el.form.costAccessoriesList && !el.form.costAccessoriesList.children.length) {
+      addAccessoryRow();
     }
 
     bindEvents();
