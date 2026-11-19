@@ -5,15 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>FastProduction — City of Fashion</title>
   
-  <!-- Menggunakan Font Standar FastProduction V2 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
-    /* =========================================
-       DESIGN SYSTEM FASTPRODUCTION V2
-       ========================================= */
     :root {
       --bg: #111412;
       --surface: #191e1a;
@@ -44,28 +40,21 @@
       color: var(--text);
     }
 
-    /* =========================================
-       CANVAS WORLD
-       ========================================= */
     #game-world {
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%; z-index: 1;
     }
 
-    /* =========================================
-       GLOBAL UI LAYER
-       ========================================= */
     #ui-layer {
       position: absolute; top: 0; left: 0;
       width: 100%; height: 100%; z-index: 10;
       pointer-events: none;
       display: flex; flex-direction: column;
       padding: 1.5rem;
+      transition: opacity 0.5s ease;
     }
 
-    /* =========================================
-       1. INITIAL LOADING SCREEN
-       ========================================= */
+    /* 1. INITIAL LOADING SCREEN */
     #initial-loader {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
@@ -103,9 +92,7 @@
       letter-spacing: 1px; text-align: center;
     }
 
-    /* =========================================
-       HEADER & STATUS
-       ========================================= */
+    /* HEADER & STATUS */
     .game-header {
       display: flex; flex-direction: column;
       gap: 4px; pointer-events: auto;
@@ -150,9 +137,7 @@
       animation: pulse 2s infinite;
     }
 
-    /* =========================================
-       2. LOGIN PANEL
-       ========================================= */
+    /* 2. LOGIN PANEL */
     .login-container {
       position: absolute; 
       top: 50%; left: 50%;
@@ -263,13 +248,11 @@
       border-radius: 50%; animation: spin 1s linear infinite;
     }
 
-    /* =========================================
-       3. CHARACTER SELECTION SCREEN
-       ========================================= */
+    /* 3. CHARACTER SELECTION SCREEN */
     #character-select {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(17, 20, 18, 0.95); /* Overlay gelap sesuai bg */
+      background: rgba(17, 20, 18, 0.95);
       z-index: 50; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
@@ -282,37 +265,73 @@
     .char-select-title {
       font-family: var(--font-main); font-size: 1.2rem;
       color: var(--text); font-weight: 700;
-      margin-bottom: 24px; text-align: center;
+      margin-bottom: 20px; text-align: center;
     }
 
     .character-card {
       display: flex; flex-direction: column;
-      align-items: center; gap: 16px;
+      align-items: center; gap: 14px;
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 32px 24px; border-radius: 12px;
-      width: 100%; max-width: 320px;
+      padding: 28px 24px; border-radius: 12px;
+      width: 100%; max-width: 340px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
+    .character-picker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .char-nav-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .char-nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
     .character-avatar {
-      width: 100px; height: 100px;
+      width: 112px; height: 112px;
       background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: 50%; display: flex;
       align-items: center; justify-content: center;
       font-size: 3rem; color: var(--accent);
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .character-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .character-name {
       font-family: var(--font-main); font-size: 1.3rem;
       color: var(--text); font-weight: 700; text-align: center;
-      word-break: break-all;
+      word-break: break-word;
     }
 
     .character-role {
       font-family: var(--font-mono); font-size: 0.75rem; 
-      color: var(--muted); letter-spacing: 1px;
+      color: var(--accent); letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .btn-enter-world {
@@ -320,7 +339,7 @@
       border: none;
       padding: 12px 30px; font-family: var(--font-main);
       font-weight: 700; font-size: 0.95rem; 
-      margin-top: 16px; cursor: pointer;
+      margin-top: 8px; cursor: pointer;
       transition: 0.2s; border-radius: 6px; width: 100%;
     }
     
@@ -328,13 +347,9 @@
       filter: brightness(1.1);
     }
 
-    /* ANIMATIONS */
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    /* =========================================
-       DESKTOP LAYOUT (Min-width 768px)
-       ========================================= */
     @media (min-width: 768px) {
       #ui-layer { padding: 2.5rem; }
       
@@ -354,11 +369,11 @@
       .input-group { margin-bottom: 20px; }
       .btn { height: 48px; font-size: 1rem; }
 
-      .char-select-title { font-size: 1.5rem; margin-bottom: 32px; }
-      .character-card { padding: 40px; width: auto; min-width: 340px; }
-      .character-avatar { width: 120px; height: 120px; font-size: 4rem; }
-      .character-name { font-size: 1.6rem; }
-      .character-role { font-size: 0.85rem; }
+      .char-select-title { font-size: 1.5rem; margin-bottom: 28px; }
+      .character-card { padding: 36px; width: auto; min-width: 360px; }
+      .character-avatar { width: 128px; height: 128px; }
+      .character-name { font-size: 1.5rem; }
+      .character-role { font-size: 0.8rem; }
       .btn-enter-world { padding: 14px 40px; font-size: 1.05rem; }
     }
   </style>
@@ -379,8 +394,6 @@
 
   <!-- MAIN UI -->
   <div id="ui-layer" style="display: none;">
-    
-    <!-- Header -->
     <div class="game-header" id="mainHeader">
       <div class="logo-container">
         <span class="logo-fast">FAST</span>PRODUCTION
@@ -388,7 +401,6 @@
       <div class="world-title">CITY OF FASHION</div>
     </div>
 
-    <!-- Server Status -->
     <div class="server-status" id="mainStatus">
       <div class="status-dot"></div>
       <span>ONLINE | 24ms</span>
@@ -430,7 +442,6 @@
         </form>
       </div>
     </div>
-
   </div>
 
   <!-- 3. CHARACTER SELECTION SCREEN -->
@@ -438,9 +449,13 @@
     <div class="char-select-title">Select Your Identity</div>
     
     <div class="character-card">
-      <div class="character-avatar">&#128100;</div>
+      <div class="character-picker">
+        <button type="button" class="char-nav-btn" id="btnPrevChar" aria-label="Previous Character">&lt;</button>
+        <div class="character-avatar" id="charAvatarBox">&#128100;</div>
+        <button type="button" class="char-nav-btn" id="btnNextChar" aria-label="Next Character">&gt;</button>
+      </div>
       <div class="character-name" id="charName">Fashion Architect</div>
-      <div class="character-role">MANUFACTURER / LEVEL 1</div>
+      <div class="character-role" id="charRole">ROLE #01 / LEVEL 1</div>
       
       <button class="btn-enter-world" id="btnEnterWorld">ENTER WORLD</button>
     </div>
@@ -449,14 +464,82 @@
   <script>
     /**
      * =========================================
-     * 1. CANVAS WORLD ENGINE (Industrial Dark Green)
+     * SPRITE SLICER (5x6 Grid -> 30 Images)
+     * =========================================
+     */
+    const SPRITESHEET_PATH = './assets/images/characters/character-spritesheet.jpeg';
+    const COLS = 5;
+    const ROWS = 6;
+
+    const ROLE_TITLES = [
+      'Factory Worker', 'Fashion Designer', 'Sewing Machine Operator', 'Factory Manager', 'Fashion Entrepreneur',
+      'Tailor', 'Fabric Supplier', 'Warehouse Worker', 'Sewing Machine Mechanic', 'Delivery Driver',
+      'Business Owner', 'Creative Director', 'Quality Controller', 'Pattern Maker', 'Sample Machinist',
+      'Garment Worker', 'Trims Buyer', 'Logistic Manager', 'Store Manager', 'Fashion Stylist',
+      'HR Manager', 'Graphic Designer', 'Merchandiser', 'Cutter', 'Presser',
+      'Machinist', 'Embroidery Expert', 'Shoe Designer', 'Supply Chain Officer', 'Assistant Designer'
+    ];
+
+    const characterSprites = [];
+    let spritesReady = false;
+
+    function sliceSpritesheet(img) {
+      characterSprites.length = 0;
+      const cellW = img.naturalWidth / COLS;
+      const cellH = img.naturalHeight / ROWS;
+
+      // Potong area karakter (sedikit margin atas/bawah agar label teks di bawah sel tidak ikut terambil)
+      const padX = cellW * 0.08;
+      const padTop = cellH * 0.05;
+      const padBottom = cellH * 0.22;
+
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const sx = c * cellW + padX;
+          const sy = r * cellH + padTop;
+          const sw = cellW - padX * 2;
+          const sh = cellH - padTop - padBottom;
+
+          const offCanvas = document.createElement('canvas');
+          offCanvas.width = Math.round(sw);
+          offCanvas.height = Math.round(sh);
+          const octx = offCanvas.getContext('2d');
+          octx.drawImage(img, sx, sy, sw, sh, 0, 0, offCanvas.width, offCanvas.height);
+
+          const dataUrl = offCanvas.toDataURL('image/png');
+          const spriteImg = new Image();
+          spriteImg.src = dataUrl;
+
+          characterSprites.push({
+            index: characterSprites.length,
+            role: ROLE_TITLES[characterSprites.length] || `Specialist #${characterSprites.length + 1}`,
+            dataUrl,
+            img: spriteImg
+          });
+        }
+      }
+
+      spritesReady = true;
+      renderSelectedCharacterSprite();
+    }
+
+    const sheetLoaderImg = new Image();
+    sheetLoaderImg.onload = () => sliceSpritesheet(sheetLoaderImg);
+    sheetLoaderImg.onerror = () => {
+      console.warn('Gagal memuat spritesheet:', SPRITESHEET_PATH);
+    };
+    sheetLoaderImg.src = SPRITESHEET_PATH;
+
+    /**
+     * =========================================
+     * 1. CANVAS WORLD ENGINE
      * =========================================
      */
     const canvas = document.getElementById('game-world');
     const ctx = canvas.getContext('2d');
     
     let width, height;
-    let camera = { x: 0, y: 0, targetX: 0, targetY: 0 };
+    let camera = { x: 0, y: 0 };
     
     let scale = 1;
     const BASE_TILE_W = 64;
@@ -473,30 +556,23 @@
     const vehicles = [];
     const particles = [];
 
-    // Palet warna disesuaikan dengan Design System V2
     const colors = {
       bgTop: '#111412',
       bgBottom: '#0a0d0b',
-      grid: 'rgba(198, 243, 106, 0.03)', // Accent (Lime) transparan
-      buildingBase: '#191e1a',           // Surface
-      buildingTop: '#202720',            // Surface 2
-      buildingStroke: '#303a31',         // Border
-      buildingDetail: '#111412',         // Bg
-      windowAccent: '#c6f36a',           // Accent
+      grid: 'rgba(198, 243, 106, 0.03)',
+      buildingBase: '#191e1a',
+      buildingTop: '#202720',
+      buildingStroke: '#303a31',
+      buildingDetail: '#111412',
+      windowAccent: '#c6f36a',
       vehicle: '#929c91',
       text: '#f1f3ed',
-      text: '#f1f3ed',                // Muted
     };
 
     function resize() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      
-      if (width < 768) {
-        scale = 0.65; 
-      } else {
-        scale = 1;
-      }
+      scale = width < 768 ? 0.65 : 1;
     }
     window.addEventListener('resize', resize);
     resize();
@@ -511,7 +587,9 @@
     }
 
     function initCity() {
-      buildings.length = 0; npcs.length = 0; vehicles.length = 0;
+      buildings.length = 0;
+      npcs.length = 0;
+      vehicles.length = 0;
       
       for (let x = -10; x <= 10; x++) {
         for (let y = -10; y <= 10; y++) {
@@ -522,18 +600,33 @@
           buildings.push({
             x: x * 2, y: y * 2, z: heightZ,
             type: Math.random() > 0.8 ? 'factory' : 'shop',
-            pulse: Math.random() * Math.PI * 2, speed: 0.005 + Math.random() * 0.01 // Animasi lebih tenang
+            pulse: Math.random() * Math.PI * 2,
+            speed: 0.005 + Math.random() * 0.01
           });
         }
       }
 
-      for(let i=0; i<20; i++) {
-        let npc = { x: (Math.random() - 0.5) * 30, y: (Math.random() - 0.5) * 30, targetX: 0, targetY: 0, speed: 0.02 + Math.random() * 0.03, color: `rgba(198, 243, 106, ${Math.random() * 0.5 + 0.3})` }; // NPC warna lime pudar
-        resetNpcTarget(npc); npcs.push(npc);
+      for (let i = 0; i < 20; i++) {
+        const npc = {
+          x: (Math.random() - 0.5) * 30,
+          y: (Math.random() - 0.5) * 30,
+          targetX: 0,
+          targetY: 0,
+          speed: 0.02 + Math.random() * 0.03,
+          spriteIndex: i % 30,
+          color: `rgba(198, 243, 106, ${Math.random() * 0.5 + 0.3})`
+        };
+        resetNpcTarget(npc);
+        npcs.push(npc);
       }
 
-      for(let i=0; i<8; i++) {
-        vehicles.push({ x: (Math.random() - 0.5) * 20, y: (Math.random() - 0.5) * 20, dir: Math.random() * Math.PI * 2, speed: 0.05 + Math.random() * 0.1 });
+      for (let i = 0; i < 8; i++) {
+        vehicles.push({
+          x: (Math.random() - 0.5) * 20,
+          y: (Math.random() - 0.5) * 20,
+          dir: Math.random() * Math.PI * 2,
+          speed: 0.05 + Math.random() * 0.1
+        });
       }
     }
 
@@ -543,37 +636,61 @@
     }
 
     function drawGrid() {
-      ctx.strokeStyle = colors.grid; ctx.lineWidth = 1 * scale; const extent = 30;
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1 * scale;
+      const extent = 30;
       for (let i = -extent; i <= extent; i++) {
-        let p1 = project(i, -extent, 0); let p2 = project(i, extent, 0);
+        const p1 = project(i, -extent, 0);
+        const p2 = project(i, extent, 0);
         ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
-        let p3 = project(-extent, i, 0); let p4 = project(extent, i, 0);
+
+        const p3 = project(-extent, i, 0);
+        const p4 = project(extent, i, 0);
         ctx.beginPath(); ctx.moveTo(p3.x, p3.y); ctx.lineTo(p4.x, p4.y); ctx.stroke();
       }
     }
 
     function drawBuilding(b) {
       const base = project(b.x, b.y, 0);
-      const tw = getTileW(); const th = getTileH();
-      const w = tw * 0.8; const h = th * 0.8; const bh = (b.z * th) * 0.9;
+      const tw = getTileW();
+      const th = getTileH();
+      const w = tw * 0.8;
+      const h = th * 0.8;
+      const bh = (b.z * th) * 0.9;
 
-      // Sisi Kiri
       ctx.fillStyle = colors.buildingBase;
-      ctx.beginPath(); ctx.moveTo(base.x - w/2, base.y); ctx.lineTo(base.x, base.y + h/2); ctx.lineTo(base.x, base.y + h/2 - bh); ctx.lineTo(base.x - w/2, base.y - bh); ctx.fill();
-      ctx.strokeStyle = colors.buildingDetail; ctx.lineWidth = 1 * scale; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(base.x - w/2, base.y);
+      ctx.lineTo(base.x, base.y + h/2);
+      ctx.lineTo(base.x, base.y + h/2 - bh);
+      ctx.lineTo(base.x - w/2, base.y - bh);
+      ctx.fill();
+      ctx.strokeStyle = colors.buildingDetail;
+      ctx.lineWidth = 1 * scale;
+      ctx.stroke();
 
-      // Sisi Kanan
       ctx.fillStyle = colors.buildingTop;
-      ctx.beginPath(); ctx.moveTo(base.x, base.y + h/2); ctx.lineTo(base.x + w/2, base.y); ctx.lineTo(base.x + w/2, base.y - bh); ctx.lineTo(base.x, base.y + h/2 - bh); ctx.fill();
-      ctx.strokeStyle = colors.buildingDetail; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(base.x, base.y + h/2);
+      ctx.lineTo(base.x + w/2, base.y);
+      ctx.lineTo(base.x + w/2, base.y - bh);
+      ctx.lineTo(base.x, base.y + h/2 - bh);
+      ctx.fill();
+      ctx.strokeStyle = colors.buildingDetail;
+      ctx.stroke();
 
-      // Atap
       ctx.fillStyle = colors.buildingBase;
-      ctx.beginPath(); ctx.moveTo(base.x - w/2, base.y - bh); ctx.lineTo(base.x, base.y + h/2 - bh); ctx.lineTo(base.x + w/2, base.y - bh); ctx.lineTo(base.x, base.y - h/2 - bh); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(base.x - w/2, base.y - bh);
+      ctx.lineTo(base.x, base.y + h/2 - bh);
+      ctx.lineTo(base.x + w/2, base.y - bh);
+      ctx.lineTo(base.x, base.y - h/2 - bh);
+      ctx.fill();
 
-      // Lampu Jendela (Lebih natural, tidak glow berlebihan)
       const pulse = (Math.sin(Date.now() * b.speed + b.pulse) + 1) / 2;
-      ctx.strokeStyle = b.type === 'factory' ? `rgba(198, 243, 106, ${0.2 + pulse * 0.3})` : colors.buildingStroke;
+      ctx.strokeStyle = b.type === 'factory'
+        ? `rgba(198, 243, 106, ${0.2 + pulse * 0.3})`
+        : colors.buildingStroke;
       ctx.lineWidth = 2 * scale;
       
       ctx.beginPath(); ctx.moveTo(base.x - w/4, base.y + h/4); ctx.lineTo(base.x - w/4, base.y + h/4 - bh); ctx.stroke();
@@ -594,42 +711,79 @@
     function drawNPC(n) {
       const p = project(n.x, n.y, 0.3);
       const s = scale;
-      ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, 6 * s, 3 * s, 0, 0, Math.PI*2); ctx.fill();
-      
-      ctx.fillStyle = n.color; ctx.beginPath(); ctx.arc(p.x, p.y - 10 * s, 4 * s, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = colors.text; ctx.beginPath(); ctx.arc(p.x, p.y - 16 * s, 3 * s, 0, Math.PI*2); ctx.fill();
-      
-      ctx.strokeStyle = n.color; ctx.lineWidth = 1 * s; ctx.beginPath(); ctx.arc(p.x, p.y - 10 * s, 8 * s, 0, Math.PI*2); ctx.stroke();
+
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y, 7 * s, 3.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const spriteObj = spritesReady ? characterSprites[n.spriteIndex] : null;
+      if (spriteObj && spriteObj.img.complete) {
+        const size = 34 * s;
+        ctx.drawImage(spriteObj.img, p.x - size / 2, p.y - size + 2 * s, size, size);
+      } else {
+        ctx.fillStyle = n.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - 10 * s, 4 * s, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = colors.text;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y - 16 * s, 3 * s, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     function update() {
       const time = Date.now() * 0.0005;
-      camera.x = Math.sin(time) * 30; camera.y = Math.cos(time * 0.8) * 15;
+      camera.x = Math.sin(time) * 30;
+      camera.y = Math.cos(time * 0.8) * 15;
 
       npcs.forEach(n => {
-        const dx = n.targetX - n.x; const dy = n.targetY - n.y; const dist = Math.hypot(dx, dy);
+        const dx = n.targetX - n.x;
+        const dy = n.targetY - n.y;
+        const dist = Math.hypot(dx, dy);
         if (dist < 0.5) resetNpcTarget(n);
-        else { n.x += (dx / dist) * n.speed; n.y += (dy / dist) * n.speed; }
+        else {
+          n.x += (dx / dist) * n.speed;
+          n.y += (dy / dist) * n.speed;
+        }
       });
 
       vehicles.forEach(v => {
-        v.x += Math.cos(v.dir) * v.speed; v.y += Math.sin(v.dir) * v.speed;
-        if (Math.abs(v.x) > 25 || Math.abs(v.y) > 25) { v.dir += Math.PI; v.x += Math.cos(v.dir) * v.speed; v.y += Math.sin(v.dir) * v.speed; }
+        v.x += Math.cos(v.dir) * v.speed;
+        v.y += Math.sin(v.dir) * v.speed;
+        if (Math.abs(v.x) > 25 || Math.abs(v.y) > 25) {
+          v.dir += Math.PI;
+          v.x += Math.cos(v.dir) * v.speed;
+          v.y += Math.sin(v.dir) * v.speed;
+        }
       });
 
-      if (Math.random() < 0.1) { // Partikel lebih sedikit
-        particles.push({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 0.5, vy: -0.5 - Math.random() * 0.5, life: 1, decay: 0.01 + Math.random() * 0.02 });
+      if (Math.random() < 0.1) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: -0.5 - Math.random() * 0.5,
+          life: 1,
+          decay: 0.01 + Math.random() * 0.02
+        });
       }
       for (let i = particles.length - 1; i >= 0; i--) {
-        let p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
         if (p.life <= 0) particles.splice(i, 1);
       }
     }
 
     function render() {
       const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-      bgGrad.addColorStop(0, colors.bgTop); bgGrad.addColorStop(1, colors.bgBottom);
-      ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, width, height);
+      bgGrad.addColorStop(0, colors.bgTop);
+      bgGrad.addColorStop(1, colors.bgBottom);
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
 
       drawGrid();
 
@@ -640,22 +794,33 @@
       npcs.forEach(drawNPC);
 
       ctx.fillStyle = colors.windowAccent;
-      particles.forEach(p => { ctx.globalAlpha = p.life * 0.5; ctx.beginPath(); ctx.arc(p.x, p.y, 1.5 * scale, 0, Math.PI*2); ctx.fill(); });
+      particles.forEach(p => {
+        ctx.globalAlpha = p.life * 0.5;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5 * scale, 0, Math.PI * 2);
+        ctx.fill();
+      });
       ctx.globalAlpha = 1.0;
 
-      // Vignette (lebih halus agar tidak terlalu gelap)
       const vig = ctx.createRadialGradient(width/2, height/2, height*0.3, width/2, height/2, height);
-      vig.addColorStop(0, 'rgba(17,20,18,0)'); vig.addColorStop(1, 'rgba(17,20,18,0.8)');
-      ctx.fillStyle = vig; ctx.fillRect(0, 0, width, height);
+      vig.addColorStop(0, 'rgba(17,20,18,0)');
+      vig.addColorStop(1, 'rgba(17,20,18,0.8)');
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, width, height);
     }
 
-    function gameLoop() { update(); render(); requestAnimationFrame(gameLoop); }
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
     
-    initCity(); gameLoop();
+    initCity();
+    gameLoop();
 
     /**
      * =========================================
-     * 2. GAME UI FLOW LOGIC (Tetap Sama)
+     * 2. GAME UI FLOW & CHARACTER PICKER
      * =========================================
      */
     const initialLoader = document.getElementById('initial-loader');
@@ -671,8 +836,36 @@
     const loginSpinner = document.getElementById('loginSpinner');
     const btnText = btnLogin.querySelector('.btn-text');
     const charName = document.getElementById('charName');
+    const charRole = document.getElementById('charRole');
+    const charAvatarBox = document.getElementById('charAvatarBox');
+    const btnPrevChar = document.getElementById('btnPrevChar');
+    const btnNextChar = document.getElementById('btnNextChar');
 
-    // FASE 1: INITIAL LOADING
+    let selectedCharIndex = 0;
+
+    function renderSelectedCharacterSprite() {
+      const sprite = characterSprites[selectedCharIndex];
+      if (sprite) {
+        charAvatarBox.innerHTML = `<img src="${sprite.dataUrl}" alt="${sprite.role}">`;
+        charRole.textContent = `${sprite.role.toUpperCase()} (${selectedCharIndex + 1}/30) • LV. 1`;
+        try {
+          sessionStorage.setItem('fp_character_sprite', sprite.dataUrl);
+          sessionStorage.setItem('fp_character_role', sprite.role);
+          sessionStorage.setItem('fp_character_index', String(selectedCharIndex));
+        } catch (_) {}
+      }
+    }
+
+    btnPrevChar.addEventListener('click', () => {
+      selectedCharIndex = (selectedCharIndex - 1 + 30) % 30;
+      renderSelectedCharacterSprite();
+    });
+
+    btnNextChar.addEventListener('click', () => {
+      selectedCharIndex = (selectedCharIndex + 1) % 30;
+      renderSelectedCharacterSprite();
+    });
+
     let progress = 0;
     const loadInterval = setInterval(() => {
       progress += Math.random() * 15;
@@ -702,10 +895,7 @@
       
       if (progress > 30 && progress < 60) loadText.textContent = "LOADING WORLD ASSETS...";
       if (progress > 60 && progress < 90) loadText.textContent = "SYNCHRONIZING IDENTITY...";
-      
     }, 150);
-
-    // FASE 2: SUPABASE AUTH
 
     function setLoginLoading(loading) {
       btnLogin.disabled = loading;
@@ -721,6 +911,7 @@
         'Fashion Architect';
 
       charName.textContent = name;
+      renderSelectedCharacterSprite();
       try {
         sessionStorage.setItem('fp_character_name', name);
       } catch (_) {}
@@ -758,7 +949,6 @@
       }
     });
 
-    // REGISTRASI
     document.getElementById('btnRegister').addEventListener('click', async () => {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -794,7 +984,6 @@
       }
     });
 
-    // PEMULIHAN PASSWORD
     document.querySelector('.forgot-link').addEventListener('click', async (e) => {
       e.preventDefault();
 
@@ -818,31 +1007,27 @@
       }
     });
 
-    // FASE 3: ENTER WORLD
     const btnEnterWorld = document.getElementById('btnEnterWorld');
     btnEnterWorld.addEventListener('click', () => {
       btnEnterWorld.textContent = 'LOADING WORLD...';
       
       const flash = document.createElement('div');
-      flash.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#111412;z-index:999;opacity:0;transition:opacity 0.5s;pointer-events:none;'; // Warna flash disesuaikan
+      flash.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#111412;z-index:999;opacity:0;transition:opacity 0.5s;pointer-events:none;';
       document.body.appendChild(flash);
       
       setTimeout(() => { flash.style.opacity = '1'; }, 50);
 
-      // Redirect diperbaiki ke /dashboard
       setTimeout(() => {
         window.location.href = '/dashboard.html'; 
       }, 1000);
     });
-
   </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../assets/js/config.js"></script>
-<script src="../assets/js/supabase.js"></script>
-<script src="../assets/js/auth.js"></script>
-\n
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/supabase.js"></script>
+  <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/prayer-guard.js"></script>
-<script src="../assets/js/music.js"></script>
+  <script src="../assets/js/music.js"></script>
 </body>
 </html>
