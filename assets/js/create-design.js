@@ -57,7 +57,17 @@
       minQty:            document.getElementById('min-qty'),
       maxQty:            document.getElementById('max-qty'),
       interestPeriod:    document.getElementById('interest-period'),
-      poPaymentPeriod:   document.getElementById('po-payment-period')
+      poPaymentPeriod:   document.getElementById('po-payment-period'),
+      costMaterial:      document.getElementById('cost-material'),
+      costLabor:         document.getElementById('cost-labor'),
+      costOther:         document.getElementById('cost-other'),
+      costMargin:        document.getElementById('cost-margin'),
+      costQuantity:      document.getElementById('cost-quantity'),
+      costEstimate:      document.getElementById('cost-estimate'),
+      costTotalDisplay:  document.getElementById('cost-total-display'),
+      costBatchDisplay:  document.getElementById('cost-batch-display'),
+      costPriceDisplay:  document.getElementById('cost-price-display'),
+      costProfitDisplay: document.getElementById('cost-profit-display')
     };
     el.btnSaveDraft    = document.getElementById('btn-save-draft');
     el.btnContinue     = document.getElementById('btn-continue-preview');
@@ -86,6 +96,51 @@
     const i = Math.trunc(n);
     return i;
   };
+
+  function calculateCost() {
+    const read = (input) => {
+      const value = Number(input?.value || 0);
+      return Number.isFinite(value) && value > 0 ? value : 0;
+    };
+
+    const material = read(el.form.costMaterial);
+    const labor = read(el.form.costLabor);
+    const other = read(el.form.costOther);
+    const margin = Math.min(99, Math.max(0, read(el.form.costMargin)));
+
+    const quantityInput = read(el.form.costQuantity);
+    const minQuantity = read(el.form.minQty);
+    const quantity = Math.floor(quantityInput || minQuantity);
+
+    const unitCost = Math.round(material + labor + other);
+    const sellingPrice = margin >= 100
+      ? unitCost
+      : Math.ceil(unitCost / (1 - margin / 100));
+    const batchCost = quantity > 0 ? unitCost * quantity : 0;
+    const grossProfit = quantity > 0
+      ? (sellingPrice - unitCost) * quantity
+      : 0;
+
+    const money = (value) => 'Rp ' + Math.round(value).toLocaleString('id-ID');
+
+    if (el.form.costEstimate) {
+      el.form.costEstimate.value = String(unitCost);
+    }
+    if (el.form.costTotalDisplay) {
+      el.form.costTotalDisplay.textContent = money(unitCost);
+    }
+    if (el.form.costBatchDisplay) {
+      el.form.costBatchDisplay.textContent = money(batchCost);
+    }
+    if (el.form.costPriceDisplay) {
+      el.form.costPriceDisplay.textContent = money(sellingPrice);
+    }
+    if (el.form.costProfitDisplay) {
+      el.form.costProfitDisplay.textContent = money(grossProfit);
+    }
+
+    return unitCost;
+  }
 
   const getDesignIdFromUrl = () => {
     try {
@@ -271,6 +326,11 @@
       maxQty:            el.form.maxQty?.value || '',
       interestPeriod:    el.form.interestPeriod?.value || '',
       poPaymentPeriod:   el.form.poPaymentPeriod?.value || '',
+      costMaterial:      el.form.costMaterial?.value || '',
+      costLabor:         el.form.costLabor?.value || '',
+      costOther:         el.form.costOther?.value || '',
+      costMargin:        el.form.costMargin?.value || '30',
+      costQuantity:      el.form.costQuantity?.value || '',
       savedAt:           Date.now()
     };
   }
@@ -314,6 +374,14 @@
       if (el.form.constructionNotes && data.constructionNotes) el.form.constructionNotes.value = data.constructionNotes;
       if (el.form.interestPeriod && data.interestPeriod)   el.form.interestPeriod.value = data.interestPeriod;
       if (el.form.poPaymentPeriod && data.poPaymentPeriod) el.form.poPaymentPeriod.value = data.poPaymentPeriod;
+
+      if (el.form.costMaterial && data.costMaterial !== undefined) el.form.costMaterial.value = data.costMaterial;
+      if (el.form.costLabor && data.costLabor !== undefined) el.form.costLabor.value = data.costLabor;
+      if (el.form.costOther && data.costOther !== undefined) el.form.costOther.value = data.costOther;
+      if (el.form.costMargin && data.costMargin !== undefined) el.form.costMargin.value = data.costMargin;
+      if (el.form.costQuantity && data.costQuantity !== undefined) el.form.costQuantity.value = data.costQuantity;
+
+      calculateCost();
     } catch (err) {
       console.warn('[CreateDesign] restoreLocalDraft:', err);
     }
@@ -498,8 +566,8 @@
       min_qty:   toIntOrNull(el.form.minQty.value),
       max_qty:   toIntOrNull(el.form.maxQty.value),
       status:    status || 'draft',
+      cost_estimate: Number(el.form.costEstimate?.value || 0),
       updated_at: new Date().toISOString()
-      // cost_estimate: not in UI, omit
     };
 
     try {
@@ -742,8 +810,25 @@
       });
     }
 
-    // Live preview + local draft autosave
-    const inputs = Object.values(el.form).filter(Boolean);
+    // Cost Engine live calculation.
+    [
+      el.form.costMaterial,
+      el.form.costLabor,
+      el.form.costOther,
+      el.form.costMargin,
+      el.form.costQuantity,
+      el.form.minQty
+    ].filter(Boolean).forEach((input) => {
+      input.addEventListener('input', calculateCost);
+      input.addEventListener('change', calculateCost);
+    });
+
+    // Live preview + local draft autosave.
+    // Only real form controls are included; display nodes are excluded.
+    const inputs = Object.values(el.form).filter((input) =>
+      input && typeof input.addEventListener === 'function' &&
+      ('value' in input) && input.type !== 'hidden'
+    );
     let saveTimer = null;
 
     inputs.forEach((input) => {
@@ -805,6 +890,7 @@
 
     bindEvents();
     bindUploadEvents();
+    calculateCost();
     renderPreview();
   }
 

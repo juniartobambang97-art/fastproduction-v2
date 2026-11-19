@@ -538,19 +538,62 @@ gap: 4px;
 </div>
 </div>
 </section>
-<section class="section">
+<section class="section" id="cost-engine-section">
 <div class="section-head">
 <div>
 <h2>Production Cost Planning</h2>
-<div class="section-desc">Build a production budget based on real product requirements.</div>
+<div class="section-desc">Calculate estimated production cost and selling price.</div>
 </div>
 <span class="tag">03 / COST</span>
 </div>
-<div class="cost-placeholder">
-<strong>PRODUCTION COST ENGINE</strong>
-Cost breakdown, material consumption, labor, production quantity,
-unit cost, and pricing calculation will be built here.
+
+<div class="field-grid">
+  <div class="field">
+    <label for="cost-material">Material Cost / PCS (IDR)</label>
+    <input id="cost-material" type="number" min="0" step="1" inputmode="numeric" placeholder="Example: 25000">
+  </div>
+  <div class="field">
+    <label for="cost-labor">Labor Cost / PCS (IDR)</label>
+    <input id="cost-labor" type="number" min="0" step="1" inputmode="numeric" placeholder="Example: 15000">
+  </div>
+  <div class="field">
+    <label for="cost-other">Operational Cost / PCS (IDR)</label>
+    <input id="cost-other" type="number" min="0" step="1" inputmode="numeric" placeholder="Example: 5000">
+  </div>
+  <div class="field">
+    <label for="cost-margin">Target Profit Margin (%)</label>
+    <input id="cost-margin" type="number" min="0" max="99" step="0.1" value="30" inputmode="decimal">
+  </div>
+  <div class="field full">
+    <label for="cost-quantity">Production Quantity (PCS)</label>
+    <input id="cost-quantity" type="number" min="1" step="1" inputmode="numeric" placeholder="Uses minimum production quantity if empty">
+  </div>
 </div>
+
+<div style="margin-top:18px;padding:16px;background:#0c100e;border:1px solid #394b31;border-radius:7px;">
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;">
+    <div>
+      <small style="color:var(--muted);">COST / PCS</small>
+      <strong id="cost-total-display" style="display:block;color:var(--lime);font:17px var(--mono);">Rp 0</strong>
+    </div>
+    <div>
+      <small style="color:var(--muted);">TOTAL PRODUCTION COST</small>
+      <strong id="cost-batch-display" style="display:block;color:var(--lime);font:17px var(--mono);">Rp 0</strong>
+    </div>
+    <div>
+      <small style="color:var(--muted);">SUGGESTED SELLING PRICE / PCS</small>
+      <strong id="cost-price-display" style="display:block;color:var(--lime);font:17px var(--mono);">Rp 0</strong>
+    </div>
+    <div>
+      <small style="color:var(--muted);">ESTIMATED GROSS PROFIT</small>
+      <strong id="cost-profit-display" style="display:block;color:var(--lime);font:17px var(--mono);">Rp 0</strong>
+    </div>
+  </div>
+</div>
+<div style="margin-top:12px;font-size:10px;color:var(--muted);">
+  Estimates only. Selling price uses margin over selling price. Actual PO pricing can be configured in campaign settings.
+</div>
+<input type="hidden" id="cost-estimate" value="0">
 </section>
 <section class="section">
 <div class="section-head">
