@@ -18,7 +18,8 @@
     ]},
     { section: "MANAGEMENT", items: [
       ["Employees", "employees.html"],
-      ["Equipment", "equipment.html"]
+      ["Equipment", "equipment.html"],
+      ["Manage Company", "manage-company.html"]
     ]},
     { section: "FINANCIAL", items: [
       ["Wallet", "wallet.html"],
