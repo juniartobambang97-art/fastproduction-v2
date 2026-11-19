@@ -1,21 +1,76 @@
 {
   "rewrites": [
-    { "source": "/login.html", "destination": "/pages/login.html" },
-    { "source": "/dashboard.html", "destination": "/pages/dashboard.html" },
-    { "source": "/marketplace.html", "destination": "/pages/marketplace.html" },
-    { "source": "/profile.html", "destination": "/pages/profile.html" },
-    { "source": "/scope.html", "destination": "/pages/scope.html" },
-    { "source": "/wallet.html", "destination": "/pages/wallet.html" },
-    { "source": "/transactions.html", "destination": "/pages/transactions.html" },
-    { "source": "/invoices.html", "destination": "/pages/invoices.html" },
-    { "source": "/settings.html", "destination": "/pages/settings.html" },
-    { "source": "/equipment.html", "destination": "/pages/equipment.html" },
-    { "source": "/your-loker.html", "destination": "/pages/your-loker.html" },
-    { "source": "/employees.html", "destination": "/pages/employees.html" },
-    { "source": "/lab-konveksibos.html", "destination": "/pages/lab-konveksibos.html" },
-    { "source": "/workforce.html", "destination": "/pages/workforce.html" },
-    { "source": "/create-design.html", "destination": "/pages/create-design.html" },
-    { "source": "/create-company.html", "destination": "/pages/create-company.html" },
-    { "source": "/campaigns.html", "destination": "/pages/campaigns.html" }
+    {
+      "source": "/create-preview.html",
+      "destination": "/pages/create-preview.html"
+    },
+    {
+      "source": "/login.html",
+      "destination": "/pages/login.html"
+    },
+    {
+      "source": "/dashboard.html",
+      "destination": "/pages/dashboard.html"
+    },
+    {
+      "source": "/marketplace.html",
+      "destination": "/pages/marketplace.html"
+    },
+    {
+      "source": "/profile.html",
+      "destination": "/pages/profile.html"
+    },
+    {
+      "source": "/scope.html",
+      "destination": "/pages/scope.html"
+    },
+    {
+      "source": "/wallet.html",
+      "destination": "/pages/wallet.html"
+    },
+    {
+      "source": "/transactions.html",
+      "destination": "/pages/transactions.html"
+    },
+    {
+      "source": "/invoices.html",
+      "destination": "/pages/invoices.html"
+    },
+    {
+      "source": "/settings.html",
+      "destination": "/pages/settings.html"
+    },
+    {
+      "source": "/equipment.html",
+      "destination": "/pages/equipment.html"
+    },
+    {
+      "source": "/your-loker.html",
+      "destination": "/pages/your-loker.html"
+    },
+    {
+      "source": "/employees.html",
+      "destination": "/pages/employees.html"
+    },
+    {
+      "source": "/lab-konveksibos.html",
+      "destination": "/pages/lab-konveksibos.html"
+    },
+    {
+      "source": "/workforce.html",
+      "destination": "/pages/workforce.html"
+    },
+    {
+      "source": "/create-design.html",
+      "destination": "/pages/create-design.html"
+    },
+    {
+      "source": "/create-company.html",
+      "destination": "/pages/create-company.html"
+    },
+    {
+      "source": "/campaigns.html",
+      "destination": "/pages/campaigns.html"
+    }
   ]
 }
