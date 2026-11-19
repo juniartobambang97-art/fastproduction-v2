@@ -565,6 +565,20 @@
     state.mode = 'edit';
     state.originalStatus = data.status || 'draft';
 
+    ['front', 'back', 'detail'].forEach(slot => {
+      const url = data[slot + '_image_url'] || null;
+      savedImageUrls[slot] = url;
+      removedImageSlots[slot] = false;
+
+      if (url) {
+        const card = document.querySelector(`[data-upload-slot="${slot}"]`);
+        const input = card?.querySelector('.upload-input');
+        if (card && input) {
+          renderUploadPreview(card, input, { name: 'Gambar tersimpan' }, url);
+        }
+      }
+    });
+
     // Populate DB-backed fields
     if (el.form.name)      el.form.name.value      = data.name || '';
     if (el.form.material)  el.form.material.value  = data.material || '';
@@ -764,6 +778,9 @@
         toast('Desain berhasil disimpan.', 'success');
       }
 
+      // Upload gambar setelah design ID tersedia
+      await saveVisualAssets(db);
+
       // Persist local draft (extra fields remain available)
       saveLocalDraft();
       state.isDirty = false;
@@ -784,6 +801,67 @@
     } finally {
       state.isSubmitting = false;
       setSubmittingUI(false);
+    }
+  }
+
+  async function saveVisualAssets(db) {
+    const updates = {};
+
+    for (const slot of ['front', 'back', 'detail']) {
+      const selected = uploadImages[slot];
+
+      if (selected?.file) {
+        const ext = ({
+          'image/jpeg': 'jpg',
+          'image/png': 'png',
+          'image/webp': 'webp'
+        })[selected.file.type];
+
+        if (!ext) throw new Error('Format gambar tidak didukung.');
+
+        const path = `${state.designId}/${slot}.${ext}`;
+
+        const { error } = await db.storage
+          .from('design-assets')
+          .upload(path, selected.file, {
+            upsert: true,
+            contentType: selected.file.type
+          });
+
+        if (error) throw error;
+
+        const { data } = db.storage
+          .from('design-assets')
+          .getPublicUrl(path);
+
+        if (!data?.publicUrl) {
+          throw new Error(`URL gambar ${slot} gagal dibuat.`);
+        }
+
+        savedImageUrls[slot] = data.publicUrl;
+      }
+
+      if (removedImageSlots[slot]) {
+        savedImageUrls[slot] = null;
+      }
+
+      if (selected?.file || removedImageSlots[slot]) {
+        updates[slot + '_image_url'] = savedImageUrls[slot];
+      }
+    }
+
+    if (Object.keys(updates).length) {
+      const { error } = await db
+        .from('designs')
+        .update(updates)
+        .eq('id', state.designId)
+        .is('deleted_at', null);
+
+      if (error) throw error;
+
+      ['front', 'back', 'detail'].forEach(slot => {
+        removedImageSlots[slot] = false;
+      });
     }
   }
 
@@ -838,8 +916,10 @@
   }
 
 
-  /* LOCAL IMAGE PREVIEW */
+  /* IMAGE ASSETS */
   const uploadImages = {};
+  const savedImageUrls = { front: null, back: null, detail: null };
+  const removedImageSlots = { front: false, back: false, detail: false };
 
   function bindUploadEvents() {
     document.querySelectorAll('[data-upload-slot]').forEach((card) => {
@@ -863,8 +943,8 @@
         const file = input.files?.[0];
         if (!file) return;
 
-        if (!file.type.startsWith('image/')) {
-          toast('Pilih file gambar yang valid.', 'error');
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+          toast('Gunakan JPG, PNG, atau WebP.', 'error');
           input.value = '';
           return;
         }
@@ -875,7 +955,10 @@
         }
 
         const slot = card.dataset.uploadSlot;
-        if (uploadImages[slot]?.url) URL.revokeObjectURL(uploadImages[slot].url);
+        if (uploadImages[slot]?.url?.startsWith('blob:')) {
+          URL.revokeObjectURL(uploadImages[slot].url);
+        }
+        removedImageSlots[slot] = false;
 
         const url = URL.createObjectURL(file);
         uploadImages[slot] = { file, url };
@@ -909,8 +992,12 @@
     remove.addEventListener('click', (event) => {
       event.stopPropagation();
       const slot = card.dataset.uploadSlot;
-      if (uploadImages[slot]?.url) URL.revokeObjectURL(uploadImages[slot].url);
+      if (uploadImages[slot]?.url?.startsWith('blob:')) {
+        URL.revokeObjectURL(uploadImages[slot].url);
+      }
       delete uploadImages[slot];
+      savedImageUrls[slot] = null;
+      removedImageSlots[slot] = true;
 
       input.value = '';
       card.classList.remove('has-image');

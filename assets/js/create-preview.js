@@ -235,7 +235,7 @@
 
     const { data, error } = await db
       .from('designs')
-      .select('id,company_id,name,material,technique,min_qty,max_qty,cost_estimate,status,created_at,updated_at')
+      .select('id,company_id,name,material,technique,min_qty,max_qty,cost_estimate,status,front_image_url,back_image_url,detail_image_url,created_at,updated_at')
       .eq('id', designId)
       .is('deleted_at', null)
       .maybeSingle();
@@ -300,6 +300,30 @@
     const costText = formatIDR(d.cost_estimate);
     const createdText = formatDate(d.created_at);
     const updatedText = formatDate(d.updated_at);
+
+    const visualAssets = [
+      ['Front View', d.front_image_url],
+      ['Back View', d.back_image_url],
+      ['Detail View', d.detail_image_url]
+    ].filter(item => item[1]);
+
+    const visualGallery = visualAssets.length
+      ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+          ${visualAssets.map(([label, url]) => `
+            <div style="min-width:0;">
+              <img src="${escapeHtml(url)}" alt="${escapeHtml(label)}"
+                loading="lazy"
+                style="width:100%;height:220px;object-fit:contain;background:#0c100e;border:1px solid #465248;border-radius:6px;">
+              <div style="font-size:10px;color:#aab5aa;margin-top:7px;">${label}</div>
+            </div>
+          `).join('')}
+        </div>`
+      : `<div class="visual-placeholder">
+          <strong>+</strong>
+          <div>Visual assets belum tersedia.</div>
+        </div>`;
+
+    const marketplaceImage = d.front_image_url || d.back_image_url || d.detail_image_url;
 
     el.content.innerHTML = `
       <!-- Design Identity -->
@@ -403,11 +427,7 @@
           </div>
           <span class="tag">05 / VISUAL</span>
         </div>
-        <div class="visual-placeholder">
-          <strong>+</strong>
-          <div>Visual assets belum tersedia.</div>
-          <div style="font-size:10px;color:#58625b;">Fitur upload gambar akan tersedia pada versi selanjutnya.</div>
-        </div>
+        ${visualGallery}
       </section>
 
       <!-- Marketplace Preview Card -->
@@ -425,7 +445,11 @@
           Beberapa informasi (brand, deskripsi, gambar) belum tersedia karena belum diinput pada tahap Create Design.
         </div>
         <article class="preview-card">
-          <div class="visual">NO IMAGE</div>
+          <div class="visual">
+            ${marketplaceImage
+              ? `<img src="${escapeHtml(marketplaceImage)}" alt="${escapeHtml(d.name)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`
+              : 'NO IMAGE'}
+          </div>
           <div class="body">
             <h3>${escapeHtml(d.name || 'Untitled Design')}</h3>
             <div class="desc">Deskripsi desain belum diisi.</div>
