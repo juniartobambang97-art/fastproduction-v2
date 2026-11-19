@@ -1,10 +1,15 @@
 /*! FastProduction V2 — manage-company.js
- *  Module: Company Management
+ *  Module: Company Management (Owner-based)
  *  Target: pages/manage-company.html
  *  Dependencies: config.js, supabase.js, auth.js
  *  Tables: companies, company_members, profiles
  *  RPCs: rpc_list_company_members, rpc_set_company_admin,
  *        rpc_remove_company_admin, rpc_update_company
+ *  
+ *  Role hierarchy:
+ *  - owner: pembuat company, immutable, bisa manage admin
+ *  - admin: ditunjuk oleh owner, bisa edit company info
+ *  - member: anggota biasa, hanya bisa lihat
  */
 (function () {
   'use strict';
@@ -141,6 +146,12 @@
     $('#info-verified').textContent = c.verified_at ? '✓ Verified' : '⏳ Pending';
 
     // Owner name akan di-set setelah load members
+    const owner = state.members.find(m => m.member_role === 'owner');
+    if (owner && $('#info-owner')) {
+      $('#info-owner').textContent = owner.full_name || '—';
+    } else if ($('#info-owner')) {
+      $('#info-owner').textContent = '—';
+    }
   }
 
   /* =========================================================
@@ -186,12 +197,6 @@
         </div>
       `;
     }).join('');
-
-    // Set owner name di company info
-    const owner = state.members.find(m => m.member_role === 'owner');
-    if (owner && $('#info-owner')) {
-      $('#info-owner').textContent = owner.full_name || '—';
-    }
   }
 
   /* =========================================================
@@ -214,6 +219,7 @@
 
       state.members = data || [];
       renderMembers();
+      renderCompanyInfo(); // Update owner name
     } catch (err) {
       console.error('[ManageCompany] load members exception:', err);
       notify('Error: ' + (err.message || 'unknown'), true);
