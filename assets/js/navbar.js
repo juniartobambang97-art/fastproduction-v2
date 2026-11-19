@@ -11,6 +11,7 @@
       ["Marketplace", "marketplace.html"],
       ["Scope", "scope.html"],
       ["Create Design", "create-design.html"],
+      ["Campaigns", "campaigns.html"],
       ["Lab Konveksi", "lab-konveksibos.html"],
       ["Workforce", "workforce.html"],
       ["Your Loker", "your-loker.html"]
