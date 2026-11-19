@@ -129,11 +129,28 @@
 
     const navActions = document.createElement("div");
     navActions.id = "fp-nav-actions";
-    navActions.style.cssText = "position:fixed;top:16px;left:62px;z-index:99990;display:flex;align-items:center;";
-    navActions.appendChild(button);
-    document.body.append(navActions, overlay, nav);
+    navActions.style.cssText =
+      "position:fixed;top:16px;left:16px;z-index:99990;display:flex;align-items:center;gap:8px;";
 
-    if (window.FPMusic?.mount) window.FPMusic.mount(navActions);
+    button.style.position = "static";
+    button.style.top = "auto";
+    button.style.left = "auto";
+
+    const musicButton = document.createElement("button");
+    musicButton.id = "fp-navbar-music";
+    musicButton.type = "button";
+    musicButton.textContent = "♪";
+    musicButton.title = "Play music";
+    musicButton.setAttribute("aria-label", "Toggle background music");
+    musicButton.style.cssText =
+      "width:38px;height:38px;border:1px solid #303a31;border-radius:9px;background:#19211c;color:#a0aaa2;font-size:20px;cursor:pointer;";
+
+    musicButton.addEventListener("click", () => {
+      window.FPMusic?.toggle(musicButton);
+    });
+
+    navActions.append(button, musicButton);
+    document.body.append(navActions, overlay, nav);
   }
 
   async function checkAuth() {
