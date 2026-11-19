@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Company — FastProduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b0e0c;
+  --panel:#121714;
+  --line:#29332c;
+  --text:#edf2ed;
+  --muted:#89958c;
+  --lime:#c5f36b;
+}
+*{box-sizing:border-box}
+body {
+  margin:0;min-height:100vh;background:var(--bg);
+  color:var(--text);font-family:Manrope,sans-serif;
+  display:grid;place-items:center;padding:20px;
+}
+.container {width:100%;max-width:520px}
+.logo {font-size:17px;font-weight:800;margin-bottom:35px}
+.logo span {color:var(--lime)}
+.card {
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:28px;
+}
+.eyebrow {
+  color:var(--lime);font:10px 'DM Mono',monospace;
+  letter-spacing:2px;
+}
+h1 {font-size:27px;letter-spacing:-1px;margin:12px 0 8px}
+.description {
+  color:var(--muted);font-size:12px;line-height:1.8;
+  margin-bottom:27px;
+}
+label {
+  display:block;font-size:11px;font-weight:700;
+  margin:18px 0 8px;
+}
+input,select {
+  width:100%;padding:13px;border-radius:7px;
+  background:#0b0e0c;border:1px solid var(--line);
+  color:var(--text);font:13px Manrope,sans-serif;
+  outline:none;
+}
+input:focus,select:focus {border-color:var(--lime)}
+button {
+  width:100%;padding:14px;margin-top:24px;
+  border:0;border-radius:7px;background:var(--lime);
+  color:#11170d;font-weight:800;font-size:12px;
+  cursor:pointer;
+}
+button:disabled {opacity:.5;cursor:wait}
+.message {
+  display:none;margin-top:17px;padding:12px;
+  border-radius:7px;font-size:11px;line-height:1.6;
+  background:#202820;color:var(--text);
+}
+.message.error {display:block;background:#351d1d;color:#ffaaaa}
+.message.success {display:block;border:1px solid #52643d}
+.back {
+  display:block;text-align:center;margin-top:20px;
+  color:var(--muted);font-size:11px;text-decoration:none;
+}
+.back:hover {color:var(--lime)}
+.note {
+  margin-top:18px;color:var(--muted);
+  font-size:10px;line-height:1.7;text-align:center;
+}
+</style>
+</head>
+<body>
+<main class="container">
+  <div class="logo">FAST<span>PRODUCTION</span></div>
+
+  <section class="card">
+    <div class="eyebrow">WORKSPACE REGISTRATION</div>
+    <h1>Create your company.</h1>
+    <p class="description">
+      Set up your business identity to access your production
+      workspace, equipment, workforce, projects, and company tools.
+    </p>
+
+    <form id="create-company-form">
+      <label for="company-name">Company name</label>
+      <input
+        id="company-name"
+        name="company_name"
+        type="text"
+        minlength="2"
+        maxlength="80"
+        placeholder="Example: Bambang Garment"
+        autocomplete="organization"
+        required
+      >
+
+      <label for="company-type">Business type</label>
+      <select id="company-type" name="company_type" required>
+        <option value="manufacturer">Manufacturer / Workshop</option>
+        <option value="brand">Fashion Brand</option>
+      </select>
+
+      <button id="create-button" type="submit">
+        CREATE COMPANY →
+      </button>
+    </form>
+
+    <div id="company-message" class="message" role="status"></div>
+  </section>
+
+  <a class="back" href="profile.html">← Back to Profile</a>
+
+  <p class="note">
+    Company registration is available to all users.
+    Creating a company does not require a paid subscription.
+  </p>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/create-company.js"></script>
+</body>
+</html>
