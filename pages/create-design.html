@@ -578,6 +578,103 @@ unit cost, and pricing calculation will be built here.
 </div>
 </div>
 </section>
+
+<!-- =========================================
+     CAMPAIGNS (1 Design : N Campaign)
+     ========================================= -->
+<section class="section" id="campaigns-section">
+<div class="section-head">
+<div>
+<h2>Your Campaigns</h2>
+<div class="section-desc">Satu design bisa memiliki banyak campaign. Kelola target, periode interest, dan status campaign di sini.</div>
+</div>
+<div style="display:flex;gap:10px;align-items:center;">
+<span class="tag" id="campaigns-count" style="font-size:10px;">0</span>
+<button type="button" class="btn primary" id="btn-new-campaign">＋ New Campaign</button>
+</div>
+</div>
+
+<div id="campaigns-list"></div>
+
+<div class="cost-placeholder" id="campaigns-empty" style="display:none;text-align:left;">
+<strong>BELUM ADA CAMPAIGN</strong>
+Buat campaign pertama untuk design ini. Satu design bisa memiliki banyak campaign.
+</div>
+
+<div id="campaigns-status" style="display:none;margin-top:12px;font-size:11px;color:var(--muted);"></div>
+</section>
+
+<!-- Campaign Modal -->
+<div class="modal-backdrop" id="campaignModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;align-items:center;justify-content:center;padding:20px;">
+<div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;width:min(560px,100%);max-height:90vh;overflow:auto;">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+<h2 id="campaignModalTitle" style="margin:0;font-size:17px;letter-spacing:-.5px;">New Campaign</h2>
+<button type="button" class="btn" onclick="document.getElementById('campaignModal').style.display='none'" style="padding:6px 10px;">✕</button>
+</div>
+<form id="campaignForm">
+<div class="field-grid">
+<div class="field full">
+<label for="cmp-title">JUDUL CAMPAIGN *</label>
+<input id="cmp-title" name="title" maxlength="120" required placeholder="Contoh: Produksi November 2026">
+</div>
+<div class="field">
+<label for="cmp-target">TARGET QUANTITY (PCS)</label>
+<input id="cmp-target" name="target_qty" type="number" min="1" step="1" placeholder="Contoh: 500">
+</div>
+<div class="field">
+<label for="cmp-min-interest">MIN INTEREST (ORANG)</label>
+<input id="cmp-min-interest" name="min_interest" type="number" min="0" step="1" placeholder="Contoh: 50" value="0">
+</div>
+<div class="field">
+<label for="cmp-interest-period">INTEREST PERIOD (HARI)</label>
+<input id="cmp-interest-period" name="interest_period_days" type="number" min="1" step="1" placeholder="Contoh: 7">
+</div>
+<div class="field">
+<label for="cmp-po-period">PO PAYMENT PERIOD (HARI)</label>
+<input id="cmp-po-period" name="po_payment_period_days" type="number" min="1" step="1" placeholder="Contoh: 3">
+</div>
+<div class="field">
+<label for="cmp-status">STATUS</label>
+<select id="cmp-status" name="status">
+<option value="draft">Draft</option>
+<option value="open">Open</option>
+<option value="closed">Closed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+</div>
+<div class="field">
+<label for="cmp-started">TANGGAL MULAI</label>
+<input id="cmp-started" name="started_at" type="date">
+</div>
+<div class="field full">
+<label for="cmp-ended">TANGGAL SELESAI</label>
+<input id="cmp-ended" name="ended_at" type="date">
+</div>
+</div>
+<div class="actions" style="margin-top:20px;">
+<button type="button" class="btn" onclick="document.getElementById('campaignModal').style.display='none'">Batal</button>
+<button type="submit" class="btn primary">Simpan Campaign</button>
+</div>
+</form>
+</div>
+</div>
+
+<style>
+#campaigns-list{display:grid;gap:12px;}
+.campaign-card{background:#0c100e;border:1px solid var(--line);border-radius:8px;padding:16px;}
+.campaign-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.campaign-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:10px;}
+.campaign-meta small{display:block;color:var(--muted);font:9px var(--mono);letter-spacing:1px;margin-bottom:4px;}
+.campaign-meta b{font-size:12px;display:block;}
+.campaign-actions{display:flex;gap:8px;align-items:center;}
+.campaign-status-select{background:#0c100e;color:var(--text);border:1px solid var(--line);border-radius:5px;padding:8px 10px;font-size:11px;font-family:var(--mono);cursor:pointer;}
+.campaign-status-select:focus{border-color:var(--lime);outline:none;}
+@media(max-width:600px){
+.campaign-meta{grid-template-columns:repeat(2,1fr);}
+.campaign-actions{flex-wrap:wrap;}
+}
+</style>
+
 <section class="section" id="preview-section">
 <div class="section-head">
 <div>
@@ -607,6 +704,7 @@ FASTPRODUCTION — FROM DESIGN TO PRODUCTION.
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/auth.js"></script>
 <script src="../assets/js/create-design.js"></script>
+<script src="../assets/js/campaigns.js"></script>
 <script src="../assets/js/transition.js"></script>
 <script src="../assets/js/prayer-guard.js"></script>
 <script src="../assets/js/music.js"></script>
