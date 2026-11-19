@@ -22,19 +22,174 @@
 <section class="content" id="v-pending"><div class="section"><div><h2>Pending & Production Alerts</h2><p>Bahan kurang, komponen kurang, mesin, pekerja, dan QC.</p></div><button class="btn primary" onclick="openPending()">＋ Catat Kendala</button></div><div class="alertgrid" id="pendingCards"></div><div class="section"><div><h2>Material Requirements</h2><p>Ringkasan kebutuhan komponen.</p></div></div><div class="tablewrap"><table><thead><tr><th>Order</th><th>Bahan / Komponen</th><th>Kebutuhan</th><th>Tersedia</th><th>Kurang</th><th>Status</th></tr></thead><tbody id="materialRows"></tbody></table></div></section>
 <section class="content" id="v-history"><div class="section"><div><h2>Work History</h2><p>Semua aktivitas pengambilan, setoran, dan perpindahan.</p></div></div><div class="tablewrap"><table><thead><tr><th>Waktu</th><th>Aktivitas</th><th>Pekerja</th><th>Produk</th><th>Jumlah</th><th>Catatan</th></tr></thead><tbody id="historyRows"></tbody></table></div></section>
 </main></div>
-<div class="modalback" id="mWorker"><form class="modal" id="fWorker"><h2>Tambah Pekerja</h2><div class="hint">Buat profil pekerja untuk penugasan produksi.</div><div class="formgrid"><div class="formrow"><label>NAMA</label><input class="field" name="name" required></div><div class="formrow"><label>TELEPON</label><input class="field" name="phone"></div><div class="formrow"><label>PERAN</label><select class="field" name="role"><option>Operator Obras</option><option>Operator Jahit</option><option>Cutting</option><option>Finishing</option><option>Setrika</option><option>Packaging</option><option>Umum</option></select></div><div class="formrow"><label>KOMPETENSI</label><input class="field" name="skills" placeholder="Obras, jahit, cutting"></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mWorker')">Batal</button><button class="btn primary">Simpan</button></div></form></div>
+<div class="modalback" id="mWorker"><form class="modal" id="fWorker"><h2>Tambah Pekerja</h2><div class="hint">Buat profil pekerja untuk penugasan produksi.</div><div class="formgrid"><div class="formrow"><label>NAMA</label><input class="field" name="name" required></div><div class="formrow"><label>TELEPON</label><input class="field" name="phone" type="tel"></div><div class="formrow"><label>PERAN</label><select class="field" name="role"><option>Operator Obras</option><option>Operator Jahit</option><option>Cutting</option><option>Finishing</option><option>Setrika</option><option>Packaging</option><option>Umum</option></select></div><div class="formrow"><label>PENGALAMAN</label><input class="field" name="experience" placeholder="Contoh: 2 tahun"></div><div class="formrow"><label>PENEMPATAN</label><input class="field" name="assignment" placeholder="Contoh: Workshop A"></div><div class="formrow"><label>STATUS</label><select class="field" name="status"><option value="active">Active</option><option value="inactive">Inactive</option><option value="on_leave">On Leave</option></select></div><div class="formrow"><label>KOMPETENSI UTAMA</label><input class="field" name="primary_skill" placeholder="Obras, jahit, cutting"></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mWorker')">Batal</button><button type="submit" class="btn primary" id="btnSaveWorker">Simpan</button></div></form></div>
 <div class="modalback" id="mStock"><form class="modal" id="fStock"><h2>Catat Stok Masuk</h2><div class="hint">Catat barang yang sudah siap masuk alur produksi.</div><div class="formgrid"><div class="formrow"><label>SUMBER</label><select class="field" name="source"><option>PO</option><option>INDEPENDENT</option></select></div><div class="formrow"><label>NOMOR ORDER</label><input class="field" name="orderNo"></div><div class="formrow full"><label>NAMA PRODUK</label><input class="field" name="name" required></div><div class="formrow"><label>JUMLAH (PCS)</label><input class="field" name="qty" type="number" min="1" required></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mStock')">Batal</button><button class="btn primary">Simpan Stok</button></div></form></div>
 <div class="modalback" id="mAssign"><form class="modal" id="fAssign"><h2>Assign Work / Ambil Barang</h2><div class="hint">Satu pekerja hanya boleh memegang satu penugasan aktif dalam prototype ini.</div><div class="formgrid"><div class="formrow"><label>PEKERJA</label><select class="field" name="workerId" id="aWorker" required></select></div><div class="formrow"><label>STOK / ORDER</label><select class="field" name="stockId" id="aStock" required></select></div><div class="formrow"><label>BAGIAN</label><select class="field" name="stage"><option>Cutting</option><option>Obras</option><option>KAM</option><option>Jahit</option><option>Finishing</option><option>Setrika</option><option>Packaging</option></select></div><div class="formrow"><label>JUMLAH DIAMBIL (PCS)</label><input class="field" name="qty" type="number" min="1" required></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mAssign')">Batal</button><button class="btn primary">Konfirmasi Ambil</button></div></form></div>
 <div class="modalback" id="mSubmit"><form class="modal" id="fSubmit"><h2>Setor Hasil Pekerjaan</h2><div class="hint" id="submitHint"></div><input type="hidden" name="jobId"><div class="formgrid"><div class="formrow"><label>JUMLAH DISETOR</label><input class="field" name="qty" type="number" min="0" required></div><div class="formrow"><label>CACAT / REWORK</label><input class="field" name="defect" type="number" min="0" value="0"></div><div class="formrow full"><label>CATATAN</label><input class="field" name="note"></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mSubmit')">Batal</button><button class="btn primary">Simpan Setoran</button></div></form></div>
 <div class="modalback" id="mPending"><form class="modal" id="fPending"><h2>Catat Kendala Produksi</h2><div class="hint">Contoh: bahan rib kurang 40 meter, label kurang 100 pcs.</div><div class="formgrid"><div class="formrow full"><label>ORDER</label><select class="field" name="stockId" id="pStock"></select></div><div class="formrow"><label>JENIS</label><select class="field" name="type"><option>Material Shortage</option><option>Component Shortage</option><option>Machine Issue</option><option>Worker Unavailable</option><option>Quality Hold</option><option>Other</option></select></div><div class="formrow"><label>BAHAN / KOMPONEN</label><input class="field" name="material"></div><div class="formrow"><label>KEBUTUHAN</label><input class="field" name="required" type="number" min="0"></div><div class="formrow"><label>TERSEDIA</label><input class="field" name="available" type="number" min="0"></div><div class="formrow full"><label>CATATAN</label><input class="field" name="note"></div></div><div class="actions"><button type="button" class="btn" onclick="closeM('mPending')">Batal</button><button class="btn primary">Simpan Kendala</button></div></form></div>
 <div class="toast" id="toast"></div>
 <script>
+
+/* ===== WORKFORCE SUPABASE: TAMBAH PEKERJA ===== */
+const wfState = {
+  mode: 'loading',
+  user: null,
+  company: null,
+  employees: [],
+  saving: false
+};
+
+async function wfInitSupabase() {
+  const db = window.fpSupabase;
+
+  if (!db) {
+    wfState.mode = 'prototype';
+    console.warn('[Workforce] Supabase client tidak tersedia.');
+    render();
+    return;
+  }
+
+  try {
+    const { data: sessionData, error: sessionError } = await db.auth.getSession();
+    if (sessionError) throw sessionError;
+
+    const session = sessionData?.session;
+    if (!session) {
+      wfState.mode = 'prototype';
+      render();
+      return;
+    }
+
+    wfState.user = session.user;
+
+    const { data: profile, error: profileError } = await db
+      .from('profiles')
+      .select('id, default_company_id')
+      .eq('id', session.user.id)
+      .maybeSingle();
+
+    if (profileError) throw profileError;
+
+    let company = null;
+
+    if (profile?.default_company_id) {
+      const result = await db
+        .from('companies')
+        .select('id, name')
+        .eq('id', profile.default_company_id)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (result.error) throw result.error;
+      company = result.data;
+    }
+
+    if (!company) {
+      const result = await db
+        .from('company_members')
+        .select('company_id, joined_at')
+        .eq('user_id', session.user.id)
+        .order('joined_at', { ascending: false })
+        .limit(1);
+
+      if (result.error) throw result.error;
+
+      const membership = result.data?.[0];
+      if (membership) {
+        const companyResult = await db
+          .from('companies')
+          .select('id, name')
+          .eq('id', membership.company_id)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (companyResult.error) throw companyResult.error;
+        company = companyResult.data;
+      }
+    }
+
+    if (!company?.id) {
+      wfState.mode = 'no-company';
+      render();
+      return;
+    }
+
+    wfState.company = company;
+
+    const loaded = await wfLoadEmployees();
+    if (!loaded) {
+      wfState.mode = 'error';
+      render();
+      return;
+    }
+
+    wfState.mode = 'server';
+    render();
+    console.info('[Workforce] Supabase aktif:', company.name);
+
+  } catch (err) {
+    wfState.mode = 'error';
+    console.error('[Workforce] Init gagal:', err);
+    render();
+    say('Gagal menghubungkan Workforce: ' + (err.message || 'Error'));
+  }
+}
+
+async function wfLoadEmployees() {
+  const { data, error } = await window.fpSupabase
+    .from('employees')
+    .select('id, name, phone, role, experience, assignment, status, primary_skill, hired_at, created_at')
+    .eq('company_id', wfState.company.id)
+    .is('deleted_at', null)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('[Workforce] Load employees:', error);
+    say('Gagal memuat pekerja: ' + error.message);
+    return false;
+  }
+
+  wfState.employees = (data || []).map(w => ({
+    _source: 'supabase',
+    _dbId: w.id,
+    id: String(w.id),
+    name: w.name || 'Pekerja',
+    phone: w.phone || '',
+    role: w.role || 'Operator',
+    experience: w.experience || '',
+    assignment: w.assignment || '',
+    status: w.status || 'active',
+    primary_skill: w.primary_skill || '',
+    skills: w.primary_skill ? [w.primary_skill] : [],
+    hired_at: w.hired_at,
+    created_at: w.created_at
+  }));
+
+  return true;
+}
+/* ===== END WORKFORCE SUPABASE ===== */
+
+
 const K={emp:'fp_v2_employees',local:'fp_v2_workforce_workers',stock:'fp_v2_workforce_stock',jobs:'fp_v2_work_monitor',pending:'fp_v2_workforce_pending',hist:'fp_v2_workforce_history'};
 const $=s=>document.querySelector(s),read=(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},write=(k,v)=>localStorage.setItem(k,JSON.stringify(v)),id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),num=n=>Number(n||0).toLocaleString('id-ID');
-const W=()=>{let a=[...read(K.emp),...read(K.local)];let seen=new Set;return a.map((w,i)=>({id:String(w.id??w.employeeId??w.name??w.fullName??i),name:w.name??w.fullName??w.employeeName??'Pekerja',role:w.role??w.position??'Operator',skills:w.skills??w.competencies??[],status:w.status??'active'})).filter(w=>!seen.has(w.id)&&seen.add(w.id))},S=()=>read(K.stock),J=()=>read(K.jobs),P=()=>read(K.pending),H=()=>read(K.hist),A=()=>J().filter(j=>!['submitted','done','transferred'].includes(j.status||'active'));
+const W=()=>{
+  if(wfState.mode==='server') return wfState.employees;
+  let a=[...read(K.emp),...read(K.local)],seen=new Set;
+  return a.map((w,i)=>({
+    id:String(w.id??w.employeeId??w.name??w.fullName??i),
+    name:w.name??w.fullName??w.employeeName??'Pekerja',
+    phone:w.phone??'',
+    role:w.role??w.position??'Operator',
+    experience:w.experience??'',
+    assignment:w.assignment??'',
+    primary_skill:w.primary_skill??'',
+    skills:w.skills??w.competencies??[],
+    status:w.status??'active'
+  })).filter(w=>!seen.has(w.id)&&seen.add(w.id))
+},S=()=>read(K.stock),J=()=>read(K.jobs),P=()=>read(K.pending),H=()=>read(K.hist),A=()=>J().filter(j=>!['submitted','done','transferred'].includes(j.status||'active'));
 function log(action,worker,product,qty,note=''){let h=H();h.unshift({time:new Date().toISOString(),action,worker,product,qty,note});write(K.hist,h.slice(0,500))}
 function avail(s){return Math.max(0,Number(s.qty)-Number(s.completed||0)-A().filter(j=>j.stockId===s.id).reduce((n,j)=>n+Number(j.qty),0))}
-function pop(id){$('#'+id).classList.add('show')}function closeM(id){$('#'+id).classList.remove('show')}function say(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',2300)}
+function pop(id){$('#'+id).classList.add('show')}window.modal=pop;function closeM(id){$('#'+id).classList.remove('show')}function say(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',2300)}
 function go(v){document.querySelectorAll('.content').forEach(x=>x.classList.toggle('active',x.id==='v-'+v));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.v===v));$('#title').textContent=({overview:'Production Overview',workers:'Worker Directory',stock:'Production Stock Control',assign:'Work Assignment',flow:'Production Journey',pending:'Pending & Production Alerts',history:'Work History'})[v];render()}
 $('#nav').onclick=e=>{let b=e.target.closest('[data-v]');if(b)go(b.dataset.v)};
 function openAssign(){let busy=new Set(A().map(j=>String(j.workerId)));$('#aWorker').innerHTML='<option value="">Pilih pekerja</option>'+W().filter(w=>w.status!=='inactive').map(w=>`<option value="${esc(w.id)}" ${busy.has(w.id)?'disabled':''}>${esc(w.name)}${busy.has(w.id)?' — masih pegang barang':''}</option>`).join('');$('#aStock').innerHTML=S().filter(s=>avail(s)>0).map(s=>`<option value="${s.id}">${esc(s.name)} · ${s.source} · tersedia ${num(avail(s))}</option>`).join('')||'<option value="">Tidak ada stok tersedia</option>';$('#fAssign').reset();pop('mAssign')}
@@ -51,7 +206,71 @@ function renderJobs(){$('#jobRows').innerHTML=J().map(j=>`<tr><td>${esc(j.worker
 function renderFlow(){$('#flowRows').innerHTML=H().filter(x=>/setor|handover|teruskan/i.test(x.action)).map(x=>`<div class="item"><div class="row"><b>${esc(x.product)}</b><span class="tag blue">${esc(x.action)}</span></div><div class="sub">${esc(x.worker)} · ${num(x.qty)} pcs · ${new Date(x.time).toLocaleString('id-ID')}</div><div class="sub">${esc(x.note)}</div></div>`).join('')||'<div class="empty">Belum ada perpindahan barang.</div>'}
 function renderPending(){let p=P();$('#pendingCards').innerHTML=p.map(x=>`<div class="alert"><div class="row"><span class="tag ${x.status==='resolved'?'':'warn'}">${x.status==='resolved'?'Resolved':'Pending'}</span><span class="sub">${esc(x.type)}</span></div><h3>${esc(x.product)}</h3><p>${esc(x.material)} · ${esc(x.note)}</p><strong>${num(Math.max(0,x.required-x.available))} kurang</strong><div class="sub">${num(x.required)} kebutuhan · ${num(x.available)} tersedia</div><button class="btn sm" style="margin-top:10px" onclick="resolvePending('${x.id}')">Tandai selesai</button></div>`).join('')||'<div class="empty">Belum ada catatan kendala.</div>';$('#materialRows').innerHTML=p.filter(x=>x.material).map(x=>`<tr><td>${esc(x.product)}</td><td>${esc(x.material)}</td><td>${num(x.required)}</td><td>${num(x.available)}</td><td><b>${num(Math.max(0,x.required-x.available))}</b></td><td>${x.status==='resolved'?'Selesai':'Pending'}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada material shortage.</td></tr>'}
 function renderHistory(){$('#historyRows').innerHTML=H().map(x=>`<tr><td>${new Date(x.time).toLocaleString('id-ID')}</td><td>${esc(x.action)}</td><td>${esc(x.worker)}</td><td>${esc(x.product)}</td><td>${num(x.qty)}</td><td>${esc(x.note)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">Belum ada riwayat.</td></tr>'}
-$('#fWorker').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),a=read(K.local);a.push({id:id(),name:d.name,phone:d.phone,role:d.role,skills:d.skills.split(',').map(x=>x.trim()).filter(Boolean),status:'active'});write(K.local,a);log('Pekerja ditambahkan',d.name,'-',0,d.role);closeM('mWorker');render();say('Pekerja ditambahkan')};
+$('#fWorker').onsubmit=async e=>{
+  e.preventDefault();
+  if(wfState.saving) return;
+
+  if(wfState.mode==='prototype'){say('Login dulu untuk menyimpan pekerja ke perusahaan.');return}
+  if(wfState.mode==='no-company'){say('Akun belum memiliki perusahaan.');return}
+  if(wfState.mode!=='server'){say('Koneksi Workforce belum siap. Muat ulang halaman.');return}
+
+  const d=Object.fromEntries(new FormData(e.target));
+  d.name=(d.name||'').trim();
+  if(!d.name){say('Nama pekerja wajib diisi.');return}
+
+  const btn=document.getElementById('btnSaveWorker');
+  wfState.saving=true;
+  if(btn){btn.disabled=true;btn.textContent='Menyimpan...'}
+
+  try{
+    const payload={
+      company_id:wfState.company.id,
+      name:d.name,
+      phone:(d.phone||'').trim()||null,
+      role:(d.role||'').trim()||null,
+      experience:(d.experience||'').trim()||null,
+      assignment:(d.assignment||'').trim()||null,
+      status:d.status||'active',
+      primary_skill:(d.primary_skill||'').trim()||null
+    };
+
+    const {data,error}=await window.fpSupabase
+      .from('employees')
+      .insert(payload)
+      .select('id,name,phone,role,experience,assignment,status,primary_skill,hired_at,created_at')
+      .single();
+
+    if(error) throw error;
+
+    wfState.employees.unshift({
+      _source:'supabase',
+      _dbId:data.id,
+      id:String(data.id),
+      name:data.name,
+      phone:data.phone||'',
+      role:data.role||'Operator',
+      experience:data.experience||'',
+      assignment:data.assignment||'',
+      status:data.status||'active',
+      primary_skill:data.primary_skill||'',
+      skills:data.primary_skill?[data.primary_skill]:[],
+      hired_at:data.hired_at,
+      created_at:data.created_at
+    });
+
+    log('Pekerja ditambahkan',data.name,'-',0,data.role);
+    e.target.reset();
+    closeM('mWorker');
+    render();
+    say('Pekerja berhasil ditambahkan.');
+  }catch(err){
+    console.error('[Workforce] Insert employee:',err);
+    say('Gagal menyimpan: '+(err.message||'Periksa izin perusahaan.'));
+  }finally{
+    wfState.saving=false;
+    if(btn){btn.disabled=false;btn.textContent='Simpan'}
+  }
+};
 $('#fStock').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),a=S();a.unshift({id:id(),source:d.source,name:d.name,orderNo:d.orderNo,qty:+d.qty,completed:0});write(K.stock,a);log('Stok masuk','-',d.name,+d.qty,d.source);closeM('mStock');render();say('Stok dicatat')};
 $('#fAssign').onsubmit=e=>{e.preventDefault();let d=Object.fromEntries(new FormData(e.target)),w=W().find(x=>x.id===d.workerId),s=S().find(x=>x.id===d.stockId),q=+d.qty;if(!w||!s)return say('Pilih pekerja dan stok');if(A().some(j=>String(j.workerId)===w.id))return say('Pekerja masih punya pekerjaan aktif');if(q<1||q>avail(s))return say('Jumlah melebihi stok tersedia');let j={id:id(),workerId:w.id,workerName:w.name,stockId:s.id,product:s.name,source:s.source,qty:q,stage:d.stage,status:'active',createdAt:new Date().toISOString()};let a=J();a.unshift(j);write(K.jobs,a);log('Ambil barang',w.name,s.name,q,`${s.source} · ${d.stage}`);closeM('mAssign');render();say('Barang berhasil dialokasikan')};
 function submitJob(jid){let j=J().find(x=>x.id===jid);if(!j)return;$('#fSubmit').jobId.value=jid;$('#fSubmit').qty.max=j.qty;$('#fSubmit').qty.value=j.qty;$('#submitHint').textContent=`${j.workerName} · ${j.product} · ${j.qty} pcs diambil`;pop('mSubmit')}
@@ -67,4 +286,9 @@ document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/auth.js"></script>
 <script src="../assets/js/navbar.js"></script>
+
+<script>
+if(typeof wfInitSupabase==='function') wfInitSupabase();
+</script>
+
 </body></html>
