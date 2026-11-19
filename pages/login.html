@@ -362,6 +362,7 @@
       .btn-enter-world { padding: 14px 40px; font-size: 1.05rem; }
     }
   </style>
+<link rel="stylesheet" href="../assets/css/character-select.css">
 </head>
 <body>
 
@@ -714,6 +715,8 @@
     }
 
     function showCharacter(user) {
+    if (window.FPCharacterSelect) window.FPCharacterSelect.open(user);
+
       const metadata = user.user_metadata || {};
       const name =
         metadata.full_name ||
@@ -844,5 +847,6 @@
 \n
   <script src="../assets/js/prayer-guard.js"></script>
 <script src="../assets/js/music.js"></script>
+<script src="../assets/js/character-select.js"></script>
 </body>
 </html>
