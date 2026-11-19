@@ -94,6 +94,7 @@ input:focus,select:focus{border-color:var(--lime)}
 .topline{align-items:flex-start}.topline .btn{padding:10px;font-size:10px}
 }
 </style>
+<link rel="stylesheet" href="../assets/css/navbar.css">
 </head>
 <body>
 <div class="shell">
@@ -200,9 +201,14 @@ input:focus,select:focus{border-color:var(--lime)}
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
 <script src="../assets/js/transition.js"></script>
 <script src="../assets/js/prayer-guard.js"></script>
 <script src="../assets/js/music.js"></script>
 <script src="../assets/js/employees.js"></script>
+<script src="../assets/js/navbar.js"></script>
 </body>
 </html>

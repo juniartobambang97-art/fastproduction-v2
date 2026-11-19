@@ -14,6 +14,7 @@
 @media(max-width:850px){.grid{grid-template-columns:1fr 1fr}}
 @media(max-width:700px){.layout{display:block}.sidebar{width:100%;padding:15px;border:0;border-bottom:1px solid var(--line)}.nav-label{display:none}.nav{display:flex;overflow:auto;gap:4px;margin-top:14px}.nav a{white-space:nowrap;padding:9px;font-size:10px}.main{padding:23px 15px}.heading{align-items:start;flex-direction:column}.machine-grid,.workflow{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}h1{font-size:29px}}
 </style>
+<link rel="stylesheet" href="../assets/css/navbar.css">
 </head>
 <body>
 <div class="layout">
@@ -30,7 +31,7 @@
 </aside>
 <main class="main">
 <div class="top">WORKSPACE / MANAGEMENT / <b>EQUIPMENT</b></div>
-<div class="heading"><div><div class="eyebrow">MACHINE & ASSET CENTER</div><h1>My Equipment<span style="color:var(--lime)">.</span></h1><div class="sub">Manage your machines, production capacity, and assigned operators.</div></div><button class="btn" onclick="openModal()">＋ Add Equipment</button></div>
+<div class="heading"><div><div class="eyebrow">MACHINE & ASSET CENTER</div><h1>My Equipment<span style="color:var(--lime)">.</span></h1><div class="sub">Manage your machines, production capacity, and assigned operators.</div></div><button class="btn" id="btnAddEquipment" onclick="openModal()">＋ Add Equipment</button></div>
 <div class="grid">
 <div class="card"><div class="label">TOTAL EQUIPMENT</div><div class="value">—</div><div class="desc">Registered assets</div></div>
 <div class="card"><div class="label">OPERATIONAL</div><div class="value">—</div><div class="desc">Ready for production</div></div>
@@ -79,19 +80,25 @@
 <div class="modal">
 <div class="eyebrow">NEW ASSET</div><h3>Register Equipment</h3>
 <p>Give your machine an identity in your production workspace.</p>
-<input placeholder="Machine name / model">
-<select><option>Choose machine type</option><option>Overlock</option><option>Lockstitch</option><option>Coverstitch</option><option>Cutting machine</option><option>Other</option></select>
-<select><option>Choose condition</option><option>Operational</option><option>Needs maintenance</option><option>Under maintenance</option></select>
-<input placeholder="Production capacity (optional)">
-<div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="closeModal();alert('Registration is a visual prototype. No data was saved.')">Continue</button></div>
+<input name="name" placeholder="Machine name / model">
+<select name="type"><option>Choose machine type</option><option>Overlock</option><option>Lockstitch</option><option>Coverstitch</option><option>Cutting machine</option><option>Other</option></select>
+<select name="condition"><option>Choose condition</option><option>Operational</option><option>Needs maintenance</option><option>Under maintenance</option></select>
+<input name="capacity" placeholder="Production capacity (optional)">
+<div class="modal-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="btn" onclick="handleEquipmentSubmit()">Continue</button></div>
 </div></div>
 <script>
 function openModal(){document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/auth.js"></script>
 <script src="../assets/js/transition.js"></script>
 <script src="../assets/js/prayer-guard.js"></script>
 <script src="../assets/js/music.js"></script>
+<script src="../assets/js/equipment.js"></script>
+<script src="../assets/js/navbar.js"></script>
 </body>
 </html>
