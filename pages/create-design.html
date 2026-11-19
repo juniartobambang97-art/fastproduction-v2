@@ -279,6 +279,14 @@ min-height: 90px;
 input::placeholder, textarea::placeholder {
 color: #58625b;
 }
+
+.upload { position:relative; cursor:pointer; overflow:hidden; }
+.upload:hover,.upload:focus { border-color:var(--lime); outline:none; }
+.upload.has-image { padding:8px; min-height:180px; }
+.upload-preview { width:100%; height:150px; object-fit:contain; background:#080b09; border-radius:4px; }
+.upload-filename { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.upload-remove { border:1px solid #754444; background:#291919; color:#ffaaaa; border-radius:4px; padding:5px 10px; cursor:pointer; font-size:10px; }
+
 .upload-grid {
 display: grid;
 grid-template-columns: repeat(3, 1fr);
@@ -482,21 +490,21 @@ gap: 4px;
 <span class="tag">UPLOAD AREA</span>
 </div>
 <div class="upload-grid">
-<div class="upload">
-<strong>+</strong>
-Front View
-<span>Product front design</span>
-</div>
-<div class="upload">
-<strong>+</strong>
-Back View
-<span>Product back design</span>
-</div>
-<div class="upload">
-<strong>+</strong>
-Detail View
-<span>Close-up references</span>
-</div>
+  <div class="upload" data-upload-slot="front" tabindex="0" role="button">
+    <input class="upload-input" type="file" accept="image/*" hidden>
+    <strong>+</strong>Front View
+    <span>Product front design</span>
+  </div>
+  <div class="upload" data-upload-slot="back" tabindex="0" role="button">
+    <input class="upload-input" type="file" accept="image/*" hidden>
+    <strong>+</strong>Back View
+    <span>Product back design</span>
+  </div>
+  <div class="upload" data-upload-slot="detail" tabindex="0" role="button">
+    <input class="upload-input" type="file" accept="image/*" hidden>
+    <strong>+</strong>Detail View
+    <span>Close-up references</span>
+  </div>
 </div>
 </section>
 <section class="section">

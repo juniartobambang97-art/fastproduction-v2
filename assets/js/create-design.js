@@ -621,6 +621,106 @@
     }
   }
 
+
+  /* LOCAL IMAGE PREVIEW */
+  const uploadImages = {};
+
+  function bindUploadEvents() {
+    document.querySelectorAll('[data-upload-slot]').forEach((card) => {
+      const input = card.querySelector('.upload-input');
+      if (!input) return;
+
+      card.addEventListener('click', (event) => {
+        if (event.target.closest('.upload-remove')) return;
+        if (event.target !== input) input.click();
+      });
+
+      card.addEventListener('keydown', (event) => {
+        if (event.target !== card) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          input.click();
+        }
+      });
+
+      input.addEventListener('change', () => {
+        const file = input.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          toast('Pilih file gambar yang valid.', 'error');
+          input.value = '';
+          return;
+        }
+        if (file.size > 8 * 1024 * 1024) {
+          toast('Ukuran gambar maksimal 8 MB.', 'warn');
+          input.value = '';
+          return;
+        }
+
+        const slot = card.dataset.uploadSlot;
+        if (uploadImages[slot]?.url) URL.revokeObjectURL(uploadImages[slot].url);
+
+        const url = URL.createObjectURL(file);
+        uploadImages[slot] = { file, url };
+        renderUploadPreview(card, input, file, url);
+        state.isDirty = true;
+        toast('Gambar berhasil dipilih.', 'success');
+      });
+    });
+  }
+
+  function renderUploadPreview(card, input, file, url) {
+    card.classList.add('has-image');
+    card.replaceChildren(input);
+
+    const img = document.createElement('img');
+    img.className = 'upload-preview';
+    img.src = url;
+    img.alt = 'Preview gambar';
+    card.appendChild(img);
+
+    const filename = document.createElement('span');
+    filename.className = 'upload-filename';
+    filename.textContent = file.name;
+    card.appendChild(filename);
+
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'upload-remove';
+    remove.textContent = 'Hapus gambar';
+
+    remove.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const slot = card.dataset.uploadSlot;
+      if (uploadImages[slot]?.url) URL.revokeObjectURL(uploadImages[slot].url);
+      delete uploadImages[slot];
+
+      input.value = '';
+      card.classList.remove('has-image');
+      card.replaceChildren(input);
+
+      const labels = {
+        front: ['Front View', 'Product front design'],
+        back: ['Back View', 'Product back design'],
+        detail: ['Detail View', 'Close-up references']
+      };
+      const label = labels[slot];
+
+      const plus = document.createElement('strong');
+      plus.textContent = '+';
+      card.appendChild(plus);
+      card.appendChild(document.createTextNode(label[0]));
+
+      const desc = document.createElement('span');
+      desc.textContent = label[1];
+      card.appendChild(desc);
+      state.isDirty = true;
+    });
+
+    card.appendChild(remove);
+  }
+
   /* =========================================================
    * EVENT BINDING
    * ========================================================= */
@@ -704,6 +804,7 @@
     }
 
     bindEvents();
+    bindUploadEvents();
     renderPreview();
   }
 
