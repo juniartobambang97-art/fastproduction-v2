@@ -127,7 +127,13 @@
       }
     });
 
-    document.body.append(button, overlay, nav);
+    const navActions = document.createElement("div");
+    navActions.id = "fp-nav-actions";
+    navActions.style.cssText = "position:fixed;top:16px;left:62px;z-index:99990;display:flex;align-items:center;";
+    navActions.appendChild(button);
+    document.body.append(navActions, overlay, nav);
+
+    if (window.FPMusic?.mount) window.FPMusic.mount(navActions);
   }
 
   async function checkAuth() {

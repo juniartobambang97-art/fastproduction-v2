@@ -32,23 +32,11 @@
 
   const control = document.createElement("div");
   control.id = "fp-music-control";
+  control.style.cssText = "display:flex;align-items:center;gap:5px;margin-left:8px;position:relative;";
 
-  Object.assign(control.style, {
-    position: "fixed",
-    right: "18px",
-    bottom: "18px",
-    zIndex: "10000",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "10px 13px",
-    border: "1px solid #303a31",
-    borderRadius: "12px",
-    background: "rgba(25,30,26,.96)",
-    color: "#c6f36a",
-    font: "11px 'DM Mono',monospace",
-    boxShadow: "0 5px 20px rgba(0,0,0,.25)"
-  });
+  const settings = document.createElement("div");
+  settings.id = "fp-music-settings";
+  settings.style.cssText = "display:none;position:absolute;top:44px;right:0;z-index:100001;align-items:center;gap:8px;padding:9px 11px;border:1px solid #303a31;border-radius:9px;background:#19211c;color:#c6f36a;font:10px 'DM Mono',monospace;box-shadow:0 5px 20px rgba(0,0,0,.3);";
 
   const toggle = document.createElement("button");
   toggle.id = "fp-music-toggle";
@@ -62,7 +50,13 @@
     border: "0",
     color: "#c6f36a",
     fontSize: "17px",
-    cursor: "pointer"
+    cursor: "pointer",
+    color: "#c6f36a",
+    border: "1px solid #303a31",
+    borderRadius: "7px",
+    width: "38px",
+    height: "38px",
+    background: "#121714"
   });
 
   const label = document.createElement("span");
@@ -130,8 +124,32 @@
     console.error("[FP Music] File audio gagal dimuat:", audioURL);
   });
 
-  control.append(toggle, label, volume);
-  document.body.append(audio, control);
+  const volumeLabel = document.createElement("span");
+  volumeLabel.textContent = "VOL";
+  volumeLabel.style.cssText = "color:#89958c;";
+
+  settings.append(label, volumeLabel, volume);
+  control.append(toggle, settings);
+  document.body.append(audio);
+
+  toggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+    settings.style.display = settings.style.display === "flex" ? "none" : "flex";
+  });
+
+  settings.addEventListener("click", event => event.stopPropagation());
+  document.addEventListener("click", () => {
+    settings.style.display = "none";
+  });
+
+  window.FPMusic = {
+    mount(target) {
+      if (target && !target.contains(control)) target.appendChild(control);
+    }
+  };
+
+  const existingNav = document.getElementById("fp-menu-button");
+  if (existingNav?.parentElement) window.FPMusic.mount(existingNav.parentElement);
 
   console.info("[FP Music] Global music controller aktif.");
 })();
