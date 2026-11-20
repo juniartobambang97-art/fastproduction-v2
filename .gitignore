@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-diagnostic/
-backup/
-backup-*.html
-*.bak-chat
-scope-diagnostic.txt
-docs/
-patch_scope_chat.py
