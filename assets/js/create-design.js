@@ -539,65 +539,79 @@
    * LOAD EXISTING DESIGN (EDIT MODE)
    * ========================================================= */
   async function loadDesign(designId) {
-    const db = window.fpSupabase;
-    const { data, error } = await db
-      .from('designs')
-      .select('*')
-      .eq('id', designId)
-      .is('deleted_at', null)
-      .maybeSingle();
-
-    if (error) {
-      console.error('[CreateDesign] loadDesign:', error);
-      toast('Gagal memuat desain: ' + (error.message || 'unknown'), 'error');
-      return false;
-    }
-    if (!data) {
-      toast('Desain tidak ditemukan atau sudah dihapus.', 'error');
-      return false;
-    }
-    if (data.company_id !== state.company.id) {
-      toast('Desain ini bukan milik company Anda.', 'error');
-      return false;
-    }
-
-    state.designId = data.id;
-    state.mode = 'edit';
-    state.originalStatus = data.status || 'draft';
-
-    ['front', 'back', 'detail'].forEach(slot => {
-      const url = data[slot + '_image_url'] || null;
-      savedImageUrls[slot] = url;
-      removedImageSlots[slot] = false;
-
-      if (url) {
-        const card = document.querySelector(`[data-upload-slot="${slot}"]`);
-        const input = card?.querySelector('.upload-input');
-        if (card && input) {
-          renderUploadPreview(card, input, { name: 'Gambar tersimpan' }, url);
-        }
-      }
-    });
-
-    // Populate DB-backed fields
-    if (el.form.name)      el.form.name.value      = data.name || '';
-    if (el.form.material)  el.form.material.value  = data.material || '';
-    if (el.form.technique) el.form.technique.value = data.technique || '';
-    if (el.form.minQty)    el.form.minQty.value    = data.min_qty != null ? data.min_qty : '';
-    if (el.form.maxQty)    el.form.maxQty.value    = data.max_qty != null ? data.max_qty : '';
-
-    // Update UI chrome
-    if (el.draftBadge) {
-      const label = data.status === 'draft' ? 'EDITING / DRAFT' : 'EDITING / ' + (data.status || '').toUpperCase();
-      el.draftBadge.textContent = '● ' + label;
-    }
-
-    // Restore extra fields from local draft (non-DB fields)
-    restoreLocalDraft();
-
-    toast('Desain berhasil dimuat.', 'info');
-    return true;
+  const db = window.fpSupabase;
+  
+  // Load design data
+  const { data: design, error: designError } = await db
+    .from('designs')
+    .select('*')
+    .eq('id', designId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  
+  if (designError) {
+    console.error('[CreateDesign] loadDesign:', designError);
+    toast('Gagal memuat desain: ' + (designError.message || 'unknown'), 'error');
+    return false;
   }
+  if (!design) {
+    toast('Desain tidak ditemukan atau sudah dihapus.', 'error');
+    return false;
+  }
+  if (design.company_id !== state.company.id) {
+    toast('Desain ini bukan milik company Anda.', 'error');
+    return false;
+  }
+  
+  state.designId = design.id;
+  state.mode = 'edit';
+  state.originalStatus = design.status || 'draft';
+  
+  // Load images dari table design_assets
+  const { data: assets, error: assetsError } = await db
+    .from('design_assets')
+    .select('slot, url')
+    .eq('design_id', designId);
+  
+  if (assetsError) {
+    console.warn('[CreateDesign] loadDesign assets:', assetsError);
+  }
+  
+  // Render upload previews
+  ['front', 'back', 'detail'].forEach(slot => {
+    const asset = assets?.find(a => a.slot === slot);
+    const url = asset?.url || null;
+    
+    savedImageUrls[slot] = url;
+    removedImageSlots[slot] = false;
+    
+    if (url) {
+      const card = document.querySelector(`[data-upload-slot="${slot}"]`);
+      const input = card?.querySelector('.upload-input');
+      if (card && input) {
+        renderUploadPreview(card, input, { name: 'Gambar tersimpan' }, url);
+      }
+    }
+  });
+  
+  // Populate DB-backed fields
+  if (el.form.name) el.form.name.value = design.name || '';
+  if (el.form.material) el.form.material.value = design.material || '';
+  if (el.form.technique) el.form.technique.value = design.technique || '';
+  if (el.form.minQty) el.form.minQty.value = design.min_qty != null ? design.min_qty : '';
+  if (el.form.maxQty) el.form.maxQty.value = design.max_qty != null ? design.max_qty : '';
+  
+  if (el.draftBadge) {
+    const label = design.status === 'draft' ?
+      'EDITING / DRAFT' :
+      'EDITING / ' + (design.status || '').toUpperCase();
+    el.draftBadge.textContent = '● ' + label;
+  }
+  
+  restoreLocalDraft();
+  toast('Desain berhasil dimuat.', 'info');
+  return true;
+}
 
   /* =========================================================
    * VALIDATION
@@ -805,65 +819,75 @@
   }
 
   async function saveVisualAssets(db) {
-    const updates = {};
-
-    for (const slot of ['front', 'back', 'detail']) {
-      const selected = uploadImages[slot];
-
-      if (selected?.file) {
-        const ext = ({
-          'image/jpeg': 'jpg',
-          'image/png': 'png',
-          'image/webp': 'webp'
-        })[selected.file.type];
-
-        if (!ext) throw new Error('Format gambar tidak didukung.');
-
-        const path = `${state.designId}/${slot}.${ext}`;
-
-        const { error } = await db.storage
-          .from('design-assets')
-          .upload(path, selected.file, {
-            upsert: true,
-            contentType: selected.file.type
-          });
-
-        if (error) throw error;
-
-        const { data } = db.storage
-          .from('design-assets')
-          .getPublicUrl(path);
-
-        if (!data?.publicUrl) {
-          throw new Error(`URL gambar ${slot} gagal dibuat.`);
-        }
-
-        savedImageUrls[slot] = data.publicUrl;
+  if (!state.designId || !state.company?.id) return;
+  
+  for (const slot of ['front', 'back', 'detail']) {
+    const selected = uploadImages[slot];
+    
+    // Upload file baru
+    if (selected?.file) {
+      const ext = ({
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/webp': 'webp'
+      })[selected.file.type];
+      if (!ext) throw new Error('Format gambar tidak didukung.');
+      
+      const storagePath = `${state.designId}/${slot}.${ext}`;
+      
+      // Upload ke storage
+      const { error: uploadError } = await db.storage
+        .from('design-assets')
+        .upload(storagePath, selected.file, {
+          upsert: true,
+          contentType: selected.file.type
+        });
+      if (uploadError) throw uploadError;
+      
+      // Get public URL
+      const { data: urlData } = db.storage
+        .from('design-assets')
+        .getPublicUrl(storagePath);
+      if (!urlData?.publicUrl) {
+        throw new Error(`URL gambar ${slot} gagal dibuat.`);
       }
-
-      if (removedImageSlots[slot]) {
-        savedImageUrls[slot] = null;
-      }
-
-      if (selected?.file || removedImageSlots[slot]) {
-        updates[slot + '_image_url'] = savedImageUrls[slot];
-      }
+      
+      const publicUrl = urlData.publicUrl;
+      savedImageUrls[slot] = publicUrl;
+      
+      // Upsert ke table design_assets
+      const { error: dbError } = await db
+        .from('design_assets')
+        .upsert({
+          design_id: state.designId,
+          company_id: state.company.id,
+          slot: slot,
+          url: publicUrl,
+          storage_path: storagePath,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'design_id,slot'
+        });
+      
+      if (dbError) throw dbError;
     }
-
-    if (Object.keys(updates).length) {
-      const { error } = await db
-        .from('designs')
-        .update(updates)
-        .eq('id', state.designId)
-        .is('deleted_at', null);
-
-      if (error) throw error;
-
-      ['front', 'back', 'detail'].forEach(slot => {
-        removedImageSlots[slot] = false;
-      });
+    
+    // Hapus gambar dari DB kalau user klik "Hapus gambar"
+    if (removedImageSlots[slot]) {
+      const { error: deleteError } = await db
+        .from('design_assets')
+        .delete()
+        .eq('design_id', state.designId)
+        .eq('slot', slot);
+      
+      if (deleteError) throw deleteError;
+      
+      savedImageUrls[slot] = null;
+      removedImageSlots[slot] = false;
     }
   }
+}
+
 
   function mapSupabaseError(err) {
     const msg = (err && err.message) || 'Gagal menyimpan desain.';
